@@ -6,6 +6,7 @@ body {
   font-family: "Roboto", sans-serif;
   margin: 0;
   padding: 0;
+  background-color: #e5e5e5;
 }
 
 header {
@@ -57,15 +58,13 @@ header {
 }
 
 button {
-  display: flex;
   background-color: black;
   width: 51px;
   height: 52px;
-  justify-content: center;
-  align-items: center;
   border-radius: 10px;
   border: none;
   cursor: pointer;
+  margin-left: -60px;
 }
 
 button i {
