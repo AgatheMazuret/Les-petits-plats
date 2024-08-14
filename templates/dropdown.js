@@ -1,19 +1,24 @@
-// ************************************************Créer 3 dopdown**********************************************
+// ************************************************Créer 3 dropdowns**********************************************
 
 // **************** fonction pour créer un dropdown***********************
 
-function createDropdown(containerId, buttonText, options) {
+export function createDropdown(containerId, buttonText, options) {
   // Obtenir le container où on va mettre le dropdown
+  const dropdownContainer = document.getElementById(containerId);
 
-  const dropdownContainer = document.querySelector(".dropdown");
+  if (!dropdownContainer) {
+    console.error(`Le conteneur avec l'ID '${containerId}' n'existe pas.`);
+    return;
+  }
 
-  //   Créer la structure html du dropdown
-
+  // Créer la structure HTML du dropdown
   const dropdown = document.createElement("div");
   dropdown.classList.add("dropdown");
 
   const dropdownButton = document.createElement("button");
   dropdownButton.classList.add("dropdown-button");
+  dropdownButton.setAttribute("aria-haspopup", "true");
+  dropdownButton.setAttribute("aria-expanded", "false");
   dropdownButton.textContent = buttonText;
 
   const dropdownContent = document.createElement("div");
@@ -21,7 +26,8 @@ function createDropdown(containerId, buttonText, options) {
 
   options.forEach((option) => {
     const dropdownOption = document.createElement("a");
-    a.textContent = option;
+    dropdownOption.textContent = option;
+    dropdownOption.href = "#"; // Optionnel : pour rendre les liens cliquables
     dropdownContent.appendChild(dropdownOption);
   });
 
@@ -32,15 +38,17 @@ function createDropdown(containerId, buttonText, options) {
 
   // Ajouter l'événement de clic pour afficher/masquer le dropdown
   dropdownButton.addEventListener("click", () => {
-    dropdown.classList.toggle("show");
+    const isExpanded =
+      dropdownButton.getAttribute("aria-expanded") === "true" || false;
+    dropdownButton.setAttribute("aria-expanded", !isExpanded);
+    dropdownContent.classList.toggle("show");
   });
 
   // Ajouter l'événement de clic pour fermer le dropdown si l'utilisateur clique en dehors
   window.addEventListener("click", (event) => {
-    if (!event.target.matches(".dropdown-btn")) {
-      if (dropdown.classList.contains("show")) {
-        dropdown.classList.remove("show");
-      }
+    if (!dropdown.contains(event.target)) {
+      dropdownContent.classList.remove("show");
+      dropdownButton.setAttribute("aria-expanded", "false");
     }
   });
 }

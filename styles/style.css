@@ -57,6 +57,12 @@ header {
   padding-left: 35px;
 }
 
+.search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 button {
   background-color: black;
   width: 51px;
@@ -70,4 +76,80 @@ button {
 button i {
   font-size: 27px;
   color: white;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 55px;
+  width: 100%;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  margin-top: 50px;
+  width: 380px;
+  height: 731px;
+  border-radius: 21px;
+  background-color: white;
+}
+
+.card-body {
+  padding: 25px;
+}
+
+.card img {
+  width: 380px;
+  height: 253px;
+  border-top-left-radius: 21px;
+  border-top-right-radius: 21px;
+}
+
+.card-body h2 {
+  font-size: 18px;
+  font-family: Anton;
+}
+
+.card-body p {
+  font-family: Manrope;
+}
+
+.card-body .card-description {
+  height: 78px;
+  font-size: 14px;
+  overflow: hidden;
+  margin-bottom: 31px;
+}
+
+.card-body .name-element-recette,
+.name-element-ingredients {
+  font-family: Manrope;
+  font-weight: 700;
+  line-height: 17px;
+  font-size: 12px;
+  color: #7a7a7a;
+  margin-bottom: 20px;
+}
+
+.ingredient-section {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  height: 190px;
+}
+
+.card-ingredients {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.card-body .quantity-unit {
+  font-size: 14px;
+  color: #7a7a7a;
+  margin-bottom: 25px;
 }
