@@ -90,10 +90,21 @@ button i {
 
 /****************************************************** Les dropdowns ***********************************************/
 
-.dropdown-container {
+.filters {
   display: flex;
   align-items: center;
   margin-top: 50px;
+  gap: 460px;
+}
+
+.filters h2 {
+  font-size: 21px;
+  font-family: Anton;
+}
+
+.dropdown-container {
+  display: flex;
+  align-items: center;
 }
 
 .dropdown {
@@ -102,24 +113,39 @@ button i {
 
 .dropdown-button {
   display: flex;
-
   align-items: center;
   background-color: white;
   border: none;
   border-radius: 11px;
+  padding-left: 30px;
   width: 179px;
   height: 56px;
   cursor: pointer;
 }
 
+.dropdown-button i {
+  font-size: 20px;
+  margin: auto;
+  color: black;
+}
+
 .dropdown-content {
   display: none;
+  flex-direction: column;
   position: absolute;
+  margin-left: -60px;
+  margin-top: -10px;
   background-color: white;
-  border-radius: 11px;
+  border-radius: 0 0 11px 11px;
   width: 179px;
-  height: 56px;
   z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
 }
 
 /******************************************************** Les cards *************************************************/
@@ -132,6 +158,19 @@ button i {
   height: 731px;
   border-radius: 21px;
   background-color: white;
+}
+
+.card .time-element {
+  position: absolute;
+  font-size: 12px;
+  text-align: center;
+  font-family: Manrope;
+  background-color: #ffd15b;
+  width: 63px;
+  height: 26px;
+  border-radius: 14px;
+  padding-top: 2px;
+  margin-left: 300px;
 }
 
 .card-body {

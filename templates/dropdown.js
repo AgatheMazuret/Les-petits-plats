@@ -17,17 +17,26 @@ export function createDropdown(containerId, buttonText, options) {
 
   const dropdownButton = document.createElement("button");
   dropdownButton.classList.add("dropdown-button");
-  dropdownButton.setAttribute("aria-haspopup", "true");
-  dropdownButton.setAttribute("aria-expanded", "false");
   dropdownButton.textContent = buttonText;
+
+  const chevronIcon = document.createElement("i");
+  chevronIcon.classList.add("fa-solid", "fa-chevron-down");
+  dropdownButton.appendChild(chevronIcon);
 
   const dropdownContent = document.createElement("div");
   dropdownContent.classList.add("dropdown-content");
 
+  // Créer un input pour la recherche et l'ajouter en premier
+  const inputSearch = document.createElement("input");
+  inputSearch.setAttribute("type", "text");
+  inputSearch.classList.add("dropdown-search");
+  dropdownContent.appendChild(inputSearch);
+
+  // Ajouter les options au dropdown
   options.forEach((option) => {
     const dropdownOption = document.createElement("a");
     dropdownOption.textContent = option;
-    dropdownOption.href = "#"; // Optionnel : pour rendre les liens cliquables
+    dropdownOption.href = "#";
     dropdownContent.appendChild(dropdownOption);
   });
 
@@ -36,19 +45,9 @@ export function createDropdown(containerId, buttonText, options) {
   dropdown.appendChild(dropdownContent);
   dropdownContainer.appendChild(dropdown);
 
-  // Ajouter l'événement de clic pour afficher/masquer le dropdown
+  // Ajouter l'événement de clic pour afficher/masquer le dropdown en flex
   dropdownButton.addEventListener("click", () => {
-    const isExpanded =
-      dropdownButton.getAttribute("aria-expanded") === "true" || false;
-    dropdownButton.setAttribute("aria-expanded", !isExpanded);
-    dropdownContent.classList.toggle("show");
-  });
-
-  // Ajouter l'événement de clic pour fermer le dropdown si l'utilisateur clique en dehors
-  window.addEventListener("click", (event) => {
-    if (!dropdown.contains(event.target)) {
-      dropdownContent.classList.remove("show");
-      dropdownButton.setAttribute("aria-expanded", "false");
-    }
+    dropdownContent.style.display =
+      dropdownContent.style.display === "flex" ? "none" : "flex";
   });
 }

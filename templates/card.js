@@ -10,7 +10,7 @@ export function cardTemplate(recipe) {
     ustensils,
   } = recipe;
 
-  const imageRecipe = `./public/images/recettes/${recipe.id}.jpg`;
+  const imageRecipe = `../public/images/recettes/${recipe.id}.jpg`;
   const nameRecipe = recipe.name;
   const descriptionRecipe = recipe.description;
 
@@ -30,6 +30,12 @@ export function cardTemplate(recipe) {
   img.setAttribute("src", imageRecipe);
   img.setAttribute("alt", nameRecipe);
   card.appendChild(img);
+
+  const timeElement = document.createElement("p");
+  timeElement.classList.add("time");
+  timeElement.classList.add("time-element");
+  timeElement.textContent = `${time} min`;
+  card.appendChild(timeElement);
 
   const cardBody = document.createElement("div");
   cardBody.classList.add("card-body");
