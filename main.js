@@ -50,8 +50,7 @@ createDropdown("ingredients", "Ingrédients", allIngredients);
 
 // Créer les cards
 recipes.forEach((recipe) => {
-  const imageRecipe = `./public/images/recettes/${recipe.id}.jpg`;
-  cardTemplate(recipe, imageRecipe);
+  cardTemplate(recipe);
 });
 
 // Ajouter l'événement de clic pour afficher/masquer le dropdown

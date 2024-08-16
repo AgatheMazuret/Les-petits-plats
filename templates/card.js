@@ -10,7 +10,7 @@ export function cardTemplate(recipe) {
     ustensils,
   } = recipe;
 
-  const imageRecipe = `../public/images/recettes/${recipe.id}.jpg`;
+  const imageRecipe = `/images/recettes/${recipe.image}`;
   const nameRecipe = recipe.name;
   const descriptionRecipe = recipe.description;
 

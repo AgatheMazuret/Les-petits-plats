@@ -32,6 +32,16 @@ export function createDropdown(containerId, buttonText, options) {
   inputSearch.classList.add("dropdown-search");
   dropdownContent.appendChild(inputSearch);
 
+  // Créer un bouton de recherche
+  const searchButton = document.createElement("button");
+  searchButton.classList.add("search-button");
+  inputSearch.appendChild(searchButton);
+
+  // Créer une loupe en font-awesome
+  const searchIcon = document.createElement("i");
+  searchIcon.classList.add("fa-solid", "fa-search");
+  inputSearch.appendChild(searchIcon);
+
   // Ajouter les options au dropdown
   options.forEach((option) => {
     const dropdownOption = document.createElement("a");

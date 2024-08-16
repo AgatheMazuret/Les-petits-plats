@@ -74,7 +74,7 @@ button {
   margin-left: -60px;
 }
 
-button i {
+button .fa-magnifying-glass {
   font-size: 27px;
   color: white;
 }
@@ -133,12 +133,19 @@ button i {
   display: none;
   flex-direction: column;
   position: absolute;
+  align-items: center;
   margin-left: -60px;
   margin-top: -10px;
   background-color: white;
   border-radius: 0 0 11px 11px;
   width: 179px;
   z-index: 1;
+}
+
+.dropdown-content input {
+  border: 1px solid #c6c6c6;
+  width: 163px;
+  height: 36px;
 }
 
 .dropdown-content a {
@@ -180,6 +187,7 @@ button i {
 .card img {
   width: 380px;
   height: 253px;
+  object-fit: cover;
   border-top-left-radius: 21px;
   border-top-right-radius: 21px;
 }
