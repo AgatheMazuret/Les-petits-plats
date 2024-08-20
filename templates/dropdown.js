@@ -1,7 +1,3 @@
-// ************************************************Créer 3 dropdowns**********************************************
-
-// **************** fonction pour créer un dropdown***********************
-
 export function createDropdown(containerId, buttonText, options) {
   // Obtenir le container où on va mettre le dropdown
   const dropdownContainer = document.getElementById(containerId);
@@ -35,20 +31,31 @@ export function createDropdown(containerId, buttonText, options) {
   // Créer un bouton de recherche
   const searchButton = document.createElement("button");
   searchButton.classList.add("search-button");
-  inputSearch.appendChild(searchButton);
+  dropdownContent.appendChild(searchButton);
 
   // Créer une loupe en font-awesome
   const searchIcon = document.createElement("i");
-  searchIcon.classList.add("fa-solid", "fa-search");
-  inputSearch.appendChild(searchIcon);
+  searchIcon.classList.add("fa-solid", "fa-search", "icon-grey");
+  searchButton.appendChild(searchIcon);
 
-  // Ajouter les options au dropdown
+  // Créer un conteneur pour les options avec défilement
+  const optionsContainer = document.createElement("div");
+  optionsContainer.classList.add("options-container");
+
+  // Limiter la hauteur du conteneur d'options et ajouter un style de défilement
+  optionsContainer.style.maxHeight = "200px"; // Ajustez la hauteur selon vos besoins
+  optionsContainer.style.overflowY = "auto"; // Ajouter le défilement si nécessaire
+
+  // Ajouter les options au conteneur d'options
   options.forEach((option) => {
     const dropdownOption = document.createElement("a");
     dropdownOption.textContent = option;
     dropdownOption.href = "#";
-    dropdownContent.appendChild(dropdownOption);
+    optionsContainer.appendChild(dropdownOption);
   });
+
+  // Ajouter le conteneur d'options au dropdownContent
+  dropdownContent.appendChild(optionsContainer);
 
   // Ajouter les éléments au DOM
   dropdown.appendChild(dropdownButton);
