@@ -1,4 +1,5 @@
 import { recipes } from "../public/recipes.js";
+import { cardTemplate } from "../templates/card.js";
 
 // *******************************************************Algorithme array********************************************************
 
@@ -6,6 +7,21 @@ import { recipes } from "../public/recipes.js";
 
 // Crée un tableau vide pour stocker les recettes qui correspondent à la recherche
 let results = [];
+
+// fonction pour intégrer le résultat de la recherche dans le DOM
+function displayResults(results) {
+  // Sélectionne la section des recettes
+  const recipesSection = document.querySelector(".cards");
+
+  // Supprime toutes les recettes actuelles
+  recipesSection.innerHTML = "";
+
+  // Parcourt chaque recette dans les résultats
+  results.forEach((recipe) => {
+    // Crée une card pour chaque recette
+    cardTemplate(recipe);
+  });
+}
 
 // Fonction qui effectue la recherche
 export function performSearch(searchValue) {
@@ -55,6 +71,6 @@ export function performSearch(searchValue) {
     (recipe, index) => results.indexOf(recipe) === index
   );
 
-  // Affiche les résultats finaux dans la console
-  console.log("Résultats:", results);
+  // Affiche les résultats finaux dans le DOM
+  displayResults(results);
 }

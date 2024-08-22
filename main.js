@@ -94,3 +94,22 @@ input.addEventListener("keydown", (event) => {
     performSearch(searchValue);
   }
 });
+
+// ******************************************Filtres*************************************************************
+// Barre de recherche dans dropdown ingrédients
+// Sélectionner le bouton de recherche du dropdown
+const searchBtnDrpdown = document.querySelectorAll(".search-button");
+
+// Ajouter un écouteur d'événements à chaque bouton de recherche du dropdown
+searchBtnDrpdown.forEach((btn) => {
+  btn.addEventListener("click", (event) => {
+    // Récupérer la valeur du champ de recherche dans le dropdown
+    const searchValue = event.target.previousElementSibling.value
+      .trim()
+      .toLowerCase();
+
+    // Appeler la fonction performSearch pour lancer la recherche
+    performSearch(searchValue);
+  });
+});
+//  Comment chercher juste dans la liste des boutons d'ingrédients ?

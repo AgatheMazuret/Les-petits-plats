@@ -131,8 +131,8 @@ button .fa-magnifying-glass {
 
 .dropdown-content {
   display: none;
-  flex-direction: column;
   position: absolute;
+  flex-direction: column;
   align-items: center;
   margin-top: -10px;
   background-color: white;
@@ -144,15 +144,17 @@ button .fa-magnifying-glass {
 .options-container {
   max-height: 200px;
   overflow-y: auto;
+  border-radius: 0 0 11px 11px;
 }
 
 .dropdown-content input {
   border: 1px solid #c6c6c6;
   width: 163px;
   height: 36px;
+  padding-left: 15px;
 }
 
-.dropdown-content button {
+.dropdown-content .search-button {
   position: absolute;
   left: 140px;
   background-color: white;
@@ -165,11 +167,15 @@ button .fa-magnifying-glass {
 .icon-grey {
   color: #c6c6c6;
 }
-.dropdown-content a {
+
+.dropdown-option {
   color: black;
+  width: 163px;
   padding: 12px 16px;
-  text-decoration: none;
+  border: none;
+  background-color: white;
   display: block;
+  cursor: pointer;
 }
 
 /******************************************************** Les cards *************************************************/
@@ -240,6 +246,7 @@ button .fa-magnifying-glass {
   flex-wrap: wrap;
   flex-direction: column;
   height: 190px;
+  overflow: hidden;
 }
 
 .card-ingredients {

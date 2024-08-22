@@ -45,6 +45,7 @@ export function createDropdown(containerId, buttonText, options) {
   // Ajouter les options au conteneur d'options (Mettre des boutons)
   options.forEach((option) => {
     const dropdownOption = document.createElement("button");
+    dropdownOption.classList.add("dropdown-option");
     dropdownOption.textContent = option;
     optionsContainer.appendChild(dropdownOption);
   });
