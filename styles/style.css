@@ -141,6 +141,11 @@ button .fa-magnifying-glass {
   z-index: 1;
 }
 
+.options-container {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
 .dropdown-content input {
   border: 1px solid #c6c6c6;
   width: 163px;

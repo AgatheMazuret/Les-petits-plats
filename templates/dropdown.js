@@ -42,15 +42,10 @@ export function createDropdown(containerId, buttonText, options) {
   const optionsContainer = document.createElement("div");
   optionsContainer.classList.add("options-container");
 
-  // Limiter la hauteur du conteneur d'options et ajouter un style de défilement
-  optionsContainer.style.maxHeight = "200px"; // Ajustez la hauteur selon vos besoins
-  optionsContainer.style.overflowY = "auto"; // Ajouter le défilement si nécessaire
-
-  // Ajouter les options au conteneur d'options
+  // Ajouter les options au conteneur d'options (Mettre des boutons)
   options.forEach((option) => {
-    const dropdownOption = document.createElement("a");
+    const dropdownOption = document.createElement("button");
     dropdownOption.textContent = option;
-    dropdownOption.href = "#";
     optionsContainer.appendChild(dropdownOption);
   });
 
