@@ -1,7 +1,9 @@
-import { recipes } from "./public/recipes.js";
-import { getAllAppliances } from "../main.js";
-import { getAllUstensils } from "../main.js";
-import { getAllIngredients } from "../main.js";
+import { recipes } from "../public/recipes.js";
+import {
+  getAllAppliances,
+  getAllUstensils,
+  getAllIngredients,
+} from "../main.js";
 
 const inputElement = document.querySelector(".dropdown-search");
 
@@ -20,29 +22,27 @@ function onInputChange() {
 
   const value = inputElement.value.toLowerCase();
 
-  const filteredAppliances = [];
+  const filteredAppliances = applianceNames.filter((appliance) =>
+    appliance.toLowerCase().startsWith(value)
+  );
 
-  applianceNames.forEach((appliance) => {
-    if (applianceNames.substr(0, value.length).toLowerCase() === value) {
-      filteredAppliances.push(appliance);
-    }
-  });
   createAutocomplete(filteredAppliances);
 }
 
 function createAutocomplete(list) {
   const listElement = document.querySelector(".options-container");
 
-  listElement.forEach((appliance) => {
+  // Vider la liste avant d'ajouter de nouveaux éléments
+  listElement.innerHTML = "";
+
+  // Créer une liste d'éléments pour chaque appareil filtré
+  list.forEach((appliance) => {
     const listItem = document.createElement("li");
     const applianceButton = document.createElement("button");
     applianceButton.textContent = appliance;
     listItem.appendChild(applianceButton);
-
     listElement.appendChild(listItem);
   });
-
-  document.querySelector(".options-container").appendChild(listElement);
 }
 
 function removeAutocomplete() {

@@ -3,7 +3,7 @@ import { createDropdown } from "./templates/dropdown.js";
 import { cardTemplate } from "./templates/card.js";
 import { recipes } from "./public/recipes.js";
 import { performSearch } from "./algorithmes/algorithme1.js";
-
+import "./templates/inputDropdown.js";
 // Fonction pour récupérer tous les appareils sans doublons
 export function getAllAppliances(recipes) {
   const appliancesSet = new Set();
