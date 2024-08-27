@@ -63,4 +63,10 @@ export function createDropdown(containerId, buttonText, options) {
     dropdownContent.style.display =
       dropdownContent.style.display === "flex" ? "none" : "flex";
   });
+  // Ajouter l'événement de clic sur le document pour fermer le dropdown quand on clique en dehors
+  document.addEventListener("click", (event) => {
+    if (!dropdown.contains(event.target)) {
+      dropdownContent.style.display = "none";
+    }
+  });
 }

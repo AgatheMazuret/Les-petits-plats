@@ -5,7 +5,7 @@ import { recipes } from "./public/recipes.js";
 import { performSearch } from "./algorithmes/algorithme1.js";
 
 // Fonction pour récupérer tous les appareils sans doublons
-function getAllAppliances(recipes) {
+export function getAllAppliances(recipes) {
   const appliancesSet = new Set();
   recipes.forEach((recipe) => {
     appliancesSet.add(recipe.appliance);
@@ -14,7 +14,7 @@ function getAllAppliances(recipes) {
 }
 
 // Fonction pour récupérer tous les ustensiles sans doublons
-function getAllUstensils(recipes) {
+export function getAllUstensils(recipes) {
   const ustensilsSet = new Set();
   recipes.forEach((recipe) => {
     recipe.ustensils.forEach((ustensil) => {
@@ -25,7 +25,7 @@ function getAllUstensils(recipes) {
 }
 
 // Fonction pour récupérer tous les ingrédients sans doublons
-function getAllIngredients(recipes) {
+export function getAllIngredients(recipes) {
   const ingredientsSet = new Set();
   recipes.forEach((recipe) => {
     recipe.ingredients.forEach((ingredientObj) => {
@@ -96,18 +96,26 @@ input.addEventListener("keydown", (event) => {
 });
 
 // ******************************************Filtres*************************************************************
-// Barre de recherche dans dropdown ingrédients
+
+//************************** Recherche par dropdown**************************
+// Sélectionner tous les éléments de dropdown
+const dropdownOptions = document.querySelectorAll(".dropdown-option");
+
+dropdownOptions.forEach((option) => {
+  option.addEventListener("click", (event) => {
+    const searchValue = event.target.textContent.toLowerCase();
+    performSearch(searchValue);
+  });
+});
+
+// *****************Barre de recherche dans dropdown ingrédients******************
+
 // Sélectionner le bouton de recherche du dropdown
 const searchBtnDrpdown = document.querySelectorAll(".search-button");
 
 // Ajouter un écouteur d'événements à chaque bouton de recherche du dropdown
 searchBtnDrpdown.forEach((btn) => {
   btn.addEventListener("click", (event) => {
-    // Récupérer la valeur du champ de recherche dans le dropdown
-    const searchValue = event.target.previousElementSibling.value
-      .trim()
-      .toLowerCase();
-
     // Appeler la fonction performSearch pour lancer la recherche
     performSearch(searchValue);
   });
