@@ -15,8 +15,6 @@ export function performSearch(searchValue) {
 
   // Parcourt chaque recette dans le tableau de recettes
   recipes.forEach((recipe) => {
-    console.log("Recette:", recipe); // Affiche chaque recette dans la console
-
     // Parcourt chaque ingrédient de la recette
     recipe.ingredients.forEach((ingredientObj) => {
       // Vérifie si l'ingrédient est un objet avec une propriété 'ingredient'

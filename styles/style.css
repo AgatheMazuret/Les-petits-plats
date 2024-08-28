@@ -178,6 +178,29 @@ button .fa-magnifying-glass {
   cursor: pointer;
 }
 
+.selected-option-display {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 160px;
+  gap: 20px;
+}
+
+.selected-option-option {
+  display: flex;
+  background-color: #ffd15b;
+  width: 179px;
+  height: 53px;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.fa-x {
+  font-size: 10px;
+  margin-left: 15px;
+  cursor: pointer;
+}
+
 /******************************************************** Les cards *************************************************/
 
 .card {

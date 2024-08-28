@@ -1,9 +1,17 @@
 import "./styles/style.css";
+import "./templates/inputDropdown.js";
 import { createDropdown } from "./templates/dropdown.js";
 import { cardTemplate } from "./templates/card.js";
 import { recipes } from "./public/recipes.js";
 import { performSearch } from "./algorithmes/algorithme1.js";
 
+// ********************************* Nombre de recettes *******************************************
+// Fonction pour mettre à jour l'affichage du nombre de recettes
+function updateRecipeCount(count) {
+  const recipeCount = document.querySelector(".nbr-recettes");
+  recipeCount.textContent = `${count} recettes`;
+}
+// ********************************* Affichage des recettes dans le DOM  *******************************************
 // fonction pour intégrer le résultat de la recherche dans le DOM
 function displayResults(results) {
   // Sélectionne la section des recettes
@@ -17,8 +25,11 @@ function displayResults(results) {
     // Crée une card pour chaque recette
     cardTemplate(recipe);
   });
+  // Met à jour le nombre de recettes affichées
+  updateRecipeCount(results.length);
 }
 
+// *********************************Listes sans doublons*******************************************
 // Fonction pour récupérer tous les appareils sans doublons
 export function getAllAppliances(recipes) {
   const appliancesSet = new Set();
@@ -59,7 +70,10 @@ const allAppliances = getAllAppliances(recipes);
 const allUstensils = getAllUstensils(recipes);
 const allIngredients = getAllIngredients(recipes);
 
-// ***************************************Dropdowns***********************************************************
+// ***************************************Dropdowns**************************************************
+// stocker les options seléctionnées
+
+// Mettre à jour l'affichage des recettes
 
 // Créer les dropdowns
 createDropdown("appliance", "Appareil", allAppliances);
@@ -115,12 +129,60 @@ input.addEventListener("keydown", (event) => {
 //************************** Recherche par dropdown**************************
 // Sélectionner tous les éléments de dropdown
 const dropdownOptions = document.querySelectorAll(".dropdown-option");
+// Sélectionner l'élément où afficher les options sélectionnées
+const selectedOptionDisplay = document.querySelector(
+  ".selected-option-display"
+);
 
+// Fonction pour mettre à jour les résultats en fonction des options sélectionnées
+function updateResultsBasedOnSelection() {
+  // Récupérer les valeurs sélectionnées des dropdowns
+  const selectedOptions = Array.from(
+    document.querySelectorAll(".selected-option-option")
+  ).map((option) => option.textContent.toLowerCase());
+
+  // Appeler performSearch avec les options sélectionnées
+  const results = performSearch(selectedOptions.join(" "));
+  displayResults(results);
+}
+
+// Initialiser un tableau pour stocker les options sélectionnées
+let selectedOptions = [];
+
+// Ajouter un événement à chaque option du dropdown
 dropdownOptions.forEach((option) => {
   option.addEventListener("click", (event) => {
     const searchValue = event.target.textContent.toLowerCase();
-    performSearch(searchValue);
+    const selectedOption = option.textContent;
+
+    // Vérifier si l'option est déjà sélectionnée
+    if (!selectedOptions.includes(selectedOption)) {
+      // Ajouter l'option sélectionnée au tableau
+      selectedOptions.push(selectedOption);
+    }
+
+    // Créer un p pour afficher les options sélectionnées
+    const selectedOptionOption = document.createElement("p");
+    selectedOptionOption.textContent = selectedOption;
+    selectedOptionOption.classList.add("selected-option-option");
+    selectedOptionDisplay.appendChild(selectedOptionOption);
+
+    // créer un bouton X pour supprimer l'option sélectionnée
+    const closeIcon = document.createElement("i");
+    closeIcon.classList.add("fa-solid", "fa-x");
+    selectedOptionOption.appendChild(closeIcon);
+    closeIcon.addEventListener("click", () => {
+      // Supprimer l'option sélectionnée du tableau
+      selectedOptions = selectedOptions.filter(
+        (option) => option !== selectedOption
+      );
+      // Supprimer l'élément p de l'option sélectionnée
+      selectedOptionOption.remove();
+      updateResultsBasedOnSelection();
+    });
+    // Appeler la fonction performSearch pour lancer la recherche avec les options sélectionnées
+    const results = performSearch(searchValue);
+    // Afficher les résultats de la recherche
+    displayResults(results);
   });
 });
-
-// *****************Barre de recherche dans dropdown ingrédients******************
