@@ -3,7 +3,22 @@ import { createDropdown } from "./templates/dropdown.js";
 import { cardTemplate } from "./templates/card.js";
 import { recipes } from "./public/recipes.js";
 import { performSearch } from "./algorithmes/algorithme1.js";
-import "./templates/inputDropdown.js";
+
+// fonction pour intégrer le résultat de la recherche dans le DOM
+function displayResults(results) {
+  // Sélectionne la section des recettes
+  const recipesSection = document.querySelector(".cards");
+
+  // Supprime toutes les recettes actuelles
+  recipesSection.innerHTML = "";
+
+  // Parcourt chaque recette dans les résultats
+  results.forEach((recipe) => {
+    // Crée une card pour chaque recette
+    cardTemplate(recipe);
+  });
+}
+
 // Fonction pour récupérer tous les appareils sans doublons
 export function getAllAppliances(recipes) {
   const appliancesSet = new Set();
@@ -52,9 +67,7 @@ createDropdown("ustensils", "Ustensiles", allUstensils);
 createDropdown("ingredients", "Ingrédients", allIngredients);
 
 // Créer les cards
-recipes.forEach((recipe) => {
-  cardTemplate(recipe);
-});
+displayResults(recipes);
 
 // Ajouter l'événement de clic pour afficher/masquer le dropdown
 const dropdowns = document.querySelectorAll(".dropdown-button");
@@ -79,7 +92,8 @@ btnSearch.addEventListener("click", () => {
   // Récupère la valeur du champ de recherche, enlève les espaces au début et à la fin, et met tout en minuscules
   const searchValue = input.value.trim().toLowerCase();
 
-  performSearch(searchValue);
+  const results = performSearch(searchValue);
+  displayResults(results);
 });
 
 // Ajoute un écouteur d'événements au champ de recherche
@@ -91,7 +105,8 @@ input.addEventListener("keydown", (event) => {
     const searchValue = input.value.trim().toLowerCase();
 
     // Si c'est le cas, appelle la fonction performSearch pour lancer la recherche
-    performSearch(searchValue);
+    const results = performSearch(searchValue);
+    displayResults(results);
   }
 });
 
@@ -109,15 +124,3 @@ dropdownOptions.forEach((option) => {
 });
 
 // *****************Barre de recherche dans dropdown ingrédients******************
-
-// Sélectionner le bouton de recherche du dropdown
-const searchBtnDrpdown = document.querySelectorAll(".search-button");
-
-// Ajouter un écouteur d'événements à chaque bouton de recherche du dropdown
-searchBtnDrpdown.forEach((btn) => {
-  btn.addEventListener("click", (event) => {
-    // Appeler la fonction performSearch pour lancer la recherche
-    performSearch(searchValue);
-  });
-});
-//  Comment chercher juste dans la liste des boutons d'ingrédients ?

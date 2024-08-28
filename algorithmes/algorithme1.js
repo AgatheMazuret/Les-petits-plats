@@ -8,21 +8,6 @@ import { cardTemplate } from "../templates/card.js";
 // Crée un tableau vide pour stocker les recettes qui correspondent à la recherche
 let results = [];
 
-// fonction pour intégrer le résultat de la recherche dans le DOM
-function displayResults(results) {
-  // Sélectionne la section des recettes
-  const recipesSection = document.querySelector(".cards");
-
-  // Supprime toutes les recettes actuelles
-  recipesSection.innerHTML = "";
-
-  // Parcourt chaque recette dans les résultats
-  results.forEach((recipe) => {
-    // Crée une card pour chaque recette
-    cardTemplate(recipe);
-  });
-}
-
 // Fonction qui effectue la recherche
 export function performSearch(searchValue) {
   // Vide le tableau des résultats pour chaque nouvelle recherche
@@ -72,5 +57,6 @@ export function performSearch(searchValue) {
   );
 
   // Affiche les résultats finaux dans le DOM
-  displayResults(results);
+  // displayResults(results);
+  return results;
 }

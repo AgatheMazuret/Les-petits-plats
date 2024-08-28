@@ -5,47 +5,7 @@ import {
   getAllIngredients,
 } from "../main.js";
 
-const inputElement = document.querySelector(".dropdown-search");
-
-inputElement.addEventListener("input", onInputChange);
-
-getAllAppliances(recipes);
-getAllUstensils(recipes);
-getAllIngredients(recipes);
-
-let applianceNames = [];
-let ustensilNames = [];
-let ingredientNames = [];
-
-function onInputChange() {
-  removeAutocomplete();
-
-  const value = inputElement.value.toLowerCase();
-
-  const filteredAppliances = applianceNames.filter((appliance) =>
-    appliance.toLowerCase().startsWith(value)
-  );
-
-  createAutocomplete(filteredAppliances);
-}
-
-function createAutocomplete(list) {
-  const listElement = document.querySelector(".options-container");
-
-  // Vider la liste avant d'ajouter de nouveaux éléments
-  listElement.innerHTML = "";
-
-  // Créer une liste d'éléments pour chaque appareil filtré
-  list.forEach((appliance) => {
-    const listItem = document.createElement("li");
-    const applianceButton = document.createElement("button");
-    applianceButton.textContent = appliance;
-    listItem.appendChild(applianceButton);
-    listElement.appendChild(listItem);
-  });
-}
-
-function removeAutocomplete() {
-  const listElement = document.querySelector(".options-container");
-  listElement.innerHTML = "";
-}
+// Avec les lettres tapées dans l'input, on va filtrer les appareils, ustensiles et ingrédients
+// pour afficher les résultats filtrés dans le dropdown.
+// Sélectionne l'élément d'entrée dans le document avec la classe "dropdown-search"
+const inputSearch = document.getElementsByClassName(".dropdown-search");
