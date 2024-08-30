@@ -1,5 +1,4 @@
 import { recipes } from "../public/recipes.js";
-import { cardTemplate } from "../templates/card.js";
 
 // *******************************************************Algorithme array********************************************************
 
@@ -7,6 +6,11 @@ import { cardTemplate } from "../templates/card.js";
 
 // Crée un tableau vide pour stocker les recettes qui correspondent à la recherche
 let results = [];
+let selectedOptions = [];
+
+const selectedOptionDisplay = document.querySelector(
+  ".selected-option-display"
+);
 
 // Fonction qui effectue la recherche
 export function performSearch(searchValue) {
@@ -53,6 +57,42 @@ export function performSearch(searchValue) {
   results = results.filter(
     (recipe, index) => results.indexOf(recipe) === index
   );
+
+  function updateResultsBasedOnSelection() {
+    // Récupérer les valeurs sélectionnées des dropdowns
+    const selectedOptions = Array.from(
+      document.querySelectorAll(".selected-option-option")
+    ).map((option) => option.textContent.toLowerCase());
+
+    // Appeler performSearch avec les options sélectionnées
+    const results = performSearch(selectedOptions.join(" "));
+    displayResults(results);
+  }
+
+  // Crée un <p> pour afficher les options sélectionnées
+  const selectedOptionOption = document.createElement("p");
+  selectedOptionOption.textContent = searchValue;
+  selectedOptionOption.classList.add("selected-option-option");
+  selectedOptionDisplay.appendChild(selectedOptionOption);
+
+  // Crée un bouton de fermeture pour supprimer l'option sélectionnée
+  const closeIcon = document.createElement("i");
+  closeIcon.classList.add("fa-solid", "fa-x");
+  selectedOptionOption.appendChild(closeIcon);
+
+  // Ajoute un gestionnaire d'événements pour supprimer l'option
+  closeIcon.addEventListener("click", () => {
+    // Supprime l'option sélectionnée du tableau
+    selectedOptions = selectedOptions.filter(
+      (option) => option !== selectedOptions
+    );
+
+    // Supprime l'élément <p> de l'option sélectionnée
+    selectedOptionOption.remove();
+
+    // Met à jour les résultats basés sur la sélection restante
+    updateResultsBasedOnSelection();
+  });
 
   // Affiche les résultats finaux dans le DOM
   // displayResults(results);

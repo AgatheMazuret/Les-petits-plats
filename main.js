@@ -105,6 +105,13 @@ const btnSearch = document.querySelector(".search-btn");
 btnSearch.addEventListener("click", () => {
   // Récupère la valeur du champ de recherche, enlève les espaces au début et à la fin, et met tout en minuscules
   const searchValue = input.value.trim().toLowerCase();
+  const selectedOption = option.textContent;
+
+  // Vérifier si l'option est déjà sélectionnée
+  if (!selectedOptions.includes(selectedOption)) {
+    // Ajouter l'option sélectionnée au tableau
+    selectedOptions.push(selectedOption);
+  }
 
   const results = performSearch(searchValue);
   displayResults(results);
@@ -127,7 +134,7 @@ input.addEventListener("keydown", (event) => {
 // ******************************************Filtres*************************************************************
 
 //************************** Recherche par dropdown**************************
-// Sélectionner tous les éléments de dropdown
+// // Sélectionner tous les éléments de dropdown
 const dropdownOptions = document.querySelectorAll(".dropdown-option");
 // Sélectionner l'élément où afficher les options sélectionnées
 const selectedOptionDisplay = document.querySelector(
@@ -161,25 +168,25 @@ dropdownOptions.forEach((option) => {
       selectedOptions.push(selectedOption);
     }
 
-    // Créer un p pour afficher les options sélectionnées
-    const selectedOptionOption = document.createElement("p");
-    selectedOptionOption.textContent = selectedOption;
-    selectedOptionOption.classList.add("selected-option-option");
-    selectedOptionDisplay.appendChild(selectedOptionOption);
+    // // Créer un p pour afficher les options sélectionnées
+    // const selectedOptionOption = document.createElement("p");
+    // selectedOptionOption.textContent = selectedOption;
+    // selectedOptionOption.classList.add("selected-option-option");
+    // selectedOptionDisplay.appendChild(selectedOptionOption);
 
-    // créer un bouton X pour supprimer l'option sélectionnée
-    const closeIcon = document.createElement("i");
-    closeIcon.classList.add("fa-solid", "fa-x");
-    selectedOptionOption.appendChild(closeIcon);
-    closeIcon.addEventListener("click", () => {
-      // Supprimer l'option sélectionnée du tableau
-      selectedOptions = selectedOptions.filter(
-        (option) => option !== selectedOption
-      );
-      // Supprimer l'élément p de l'option sélectionnée
-      selectedOptionOption.remove();
-      updateResultsBasedOnSelection();
-    });
+    // // créer un bouton X pour supprimer l'option sélectionnée
+    // const closeIcon = document.createElement("i");
+    // closeIcon.classList.add("fa-solid", "fa-x");
+    // selectedOptionOption.appendChild(closeIcon);
+    // closeIcon.addEventListener("click", () => {
+    //   // Supprimer l'option sélectionnée du tableau
+    //   selectedOptions = selectedOptions.filter(
+    //     (option) => option !== selectedOption
+    //   );
+    //   // Supprimer l'élément p de l'option sélectionnée
+    //   selectedOptionOption.remove();
+    //   updateResultsBasedOnSelection();
+    // });
     // Appeler la fonction performSearch pour lancer la recherche avec les options sélectionnées
     const results = performSearch(searchValue);
     // Afficher les résultats de la recherche
