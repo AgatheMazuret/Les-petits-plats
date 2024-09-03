@@ -1,5 +1,4 @@
 import "./styles/style.css";
-import "./templates/inputDropdown.js";
 import { createDropdown } from "./templates/dropdown.js";
 import { cardTemplate } from "./templates/card.js";
 import { recipes } from "./public/recipes.js";
@@ -13,7 +12,7 @@ function updateRecipeCount(count) {
 }
 // ********************************* Affichage des recettes dans le DOM  *******************************************
 // fonction pour intégrer le résultat de la recherche dans le DOM
-function displayResults(results) {
+export function displayResults(results) {
   // Sélectionne la section des recettes
   const recipesSection = document.querySelector(".cards");
 
@@ -136,22 +135,6 @@ input.addEventListener("keydown", (event) => {
 //************************** Recherche par dropdown**************************
 // // Sélectionner tous les éléments de dropdown
 const dropdownOptions = document.querySelectorAll(".dropdown-option");
-// Sélectionner l'élément où afficher les options sélectionnées
-const selectedOptionDisplay = document.querySelector(
-  ".selected-option-display"
-);
-
-// Fonction pour mettre à jour les résultats en fonction des options sélectionnées
-function updateResultsBasedOnSelection() {
-  // Récupérer les valeurs sélectionnées des dropdowns
-  const selectedOptions = Array.from(
-    document.querySelectorAll(".selected-option-option")
-  ).map((option) => option.textContent.toLowerCase());
-
-  // Appeler performSearch avec les options sélectionnées
-  const results = performSearch(selectedOptions.join(" "));
-  displayResults(results);
-}
 
 // Initialiser un tableau pour stocker les options sélectionnées
 let selectedOptions = [];
@@ -168,25 +151,6 @@ dropdownOptions.forEach((option) => {
       selectedOptions.push(selectedOption);
     }
 
-    // // Créer un p pour afficher les options sélectionnées
-    // const selectedOptionOption = document.createElement("p");
-    // selectedOptionOption.textContent = selectedOption;
-    // selectedOptionOption.classList.add("selected-option-option");
-    // selectedOptionDisplay.appendChild(selectedOptionOption);
-
-    // // créer un bouton X pour supprimer l'option sélectionnée
-    // const closeIcon = document.createElement("i");
-    // closeIcon.classList.add("fa-solid", "fa-x");
-    // selectedOptionOption.appendChild(closeIcon);
-    // closeIcon.addEventListener("click", () => {
-    //   // Supprimer l'option sélectionnée du tableau
-    //   selectedOptions = selectedOptions.filter(
-    //     (option) => option !== selectedOption
-    //   );
-    //   // Supprimer l'élément p de l'option sélectionnée
-    //   selectedOptionOption.remove();
-    //   updateResultsBasedOnSelection();
-    // });
     // Appeler la fonction performSearch pour lancer la recherche avec les options sélectionnées
     const results = performSearch(searchValue);
     // Afficher les résultats de la recherche

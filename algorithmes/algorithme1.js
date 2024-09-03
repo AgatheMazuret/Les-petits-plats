@@ -1,100 +1,155 @@
 import { recipes } from "../public/recipes.js";
-
+import { displayResults } from "../main.js";
 // *******************************************************Algorithme array********************************************************
 
 //******Recherche d'un ingrédient, d'une recette, d'un ustensile ou d'un appareil dans les recettes avec la search bar
 
 // Crée un tableau vide pour stocker les recettes qui correspondent à la recherche
 let results = [];
+
+// Crée un tableau vide pour stocker les options sélectionnées (ingrédients, ustensiles)
 let selectedOptions = [];
 
+// Initialise une variable pour l'appareil sélectionné (par exemple : "four", "mixeur")
+let selectedAppliance = null;
+
+// Sélectionne l'élément dans le DOM où les options sélectionnées seront affichées
 const selectedOptionDisplay = document.querySelector(
   ".selected-option-display"
 );
 
-// Fonction qui effectue la recherche
+// Fonction qui effectue la recherche de recettes en fonction de la valeur de recherche fournie
 export function performSearch(searchValue) {
-  // Vide le tableau des résultats pour chaque nouvelle recherche
+  // Réinitialise les résultats à chaque nouvelle recherche
   results = [];
 
-  // Parcourt chaque recette dans le tableau de recettes
+  // Parcourt toutes les recettes disponibles
   recipes.forEach((recipe) => {
-    // Parcourt chaque ingrédient de la recette
+    // Parcourt tous les ingrédients de la recette actuelle
     recipe.ingredients.forEach((ingredientObj) => {
-      // Vérifie si l'ingrédient est un objet avec une propriété 'ingredient'
+      // Vérifie si l'ingrédient est un objet et s'il contient une propriété "ingredient"
       if (typeof ingredientObj === "object" && ingredientObj.ingredient) {
-        // Vérifie si le nom de l'ingrédient contient la valeur de recherche
+        // Si l'ingrédient correspond à la valeur de recherche (en ignorant la casse), ajoute la recette aux résultats
         if (ingredientObj.ingredient.toLowerCase().includes(searchValue)) {
-          // Si oui, ajoute la recette aux résultats
           results.push(recipe);
         }
       } else {
-        // Si l'ingrédient est une chaîne de caractères simple
+        // Si l'ingrédient est une chaîne de caractères et qu'il correspond à la valeur de recherche, ajoute la recette aux résultats
         if (ingredientObj.toLowerCase().includes(searchValue)) {
-          // Vérifie si l'ingrédient contient la valeur de recherche et ajoute la recette aux résultats
           results.push(recipe);
         }
       }
     });
 
-    // Parcourt chaque ustensile de la recette
+    // Parcourt tous les ustensiles de la recette actuelle
     recipe.ustensils.forEach((ustensil) => {
-      // Vérifie si le nom de l'ustensile contient la valeur de recherche
+      // Si l'ustensile correspond à la valeur de recherche, ajoute la recette aux résultats
       if (ustensil.toLowerCase().includes(searchValue)) {
-        // Si oui, ajoute la recette aux résultats
         results.push(recipe);
       }
     });
 
-    // Vérifie si l'appareil utilisé dans la recette contient la valeur de recherche
+    // Vérifie si l'appareil de la recette correspond à la valeur de recherche
     if (recipe.appliance.toLowerCase().includes(searchValue)) {
       // Si oui, ajoute la recette aux résultats
       results.push(recipe);
     }
   });
 
-  // Enlève les doublons des résultats pour que chaque recette apparaisse une seule fois
+  // Supprime les doublons dans les résultats en ne gardant qu'une seule occurrence de chaque recette
   results = results.filter(
     (recipe, index) => results.indexOf(recipe) === index
   );
 
+  // Fonction qui met à jour les résultats en fonction des options sélectionnées (ingrédients, ustensiles, appareils)
   function updateResultsBasedOnSelection() {
-    // Récupérer les valeurs sélectionnées des dropdowns
+    // Récupère toutes les options sélectionnées dans l'interface utilisateur et les convertit en minuscules
     const selectedOptions = Array.from(
       document.querySelectorAll(".selected-option-option")
     ).map((option) => option.textContent.toLowerCase());
 
-    // Appeler performSearch avec les options sélectionnées
+    // Re-effectue la recherche avec les options sélectionnées et affiche les résultats
     const results = performSearch(selectedOptions.join(" "));
     displayResults(results);
   }
 
-  // Crée un <p> pour afficher les options sélectionnées
-  const selectedOptionOption = document.createElement("p");
-  selectedOptionOption.textContent = searchValue;
-  selectedOptionOption.classList.add("selected-option-option");
-  selectedOptionDisplay.appendChild(selectedOptionOption);
+  // Gère l'ajout de l'appareil sélectionné
+  if (
+    recipes.some((recipe) => recipe.appliance.toLowerCase() === searchValue)
+  ) {
+    // Vérifie si un appareil est déjà sélectionné
+    if (selectedAppliance) {
+      // Supprime l'ancien appareil sélectionné de la liste des options sélectionnées
+      selectedOptions = selectedOptions.filter(
+        (option) => option !== selectedAppliance
+      );
+      // Supprime l'élément correspondant à l'ancien appareil dans l'interface
+      const oldApplianceElement = document.querySelector(
+        `.selected-option-option[data-type="appliance"]`
+      );
+      if (oldApplianceElement) {
+        oldApplianceElement.remove();
+      }
+    }
 
-  // Crée un bouton de fermeture pour supprimer l'option sélectionnée
-  const closeIcon = document.createElement("i");
-  closeIcon.classList.add("fa-solid", "fa-x");
-  selectedOptionOption.appendChild(closeIcon);
+    // Met à jour la variable selectedAppliance avec le nouvel appareil sélectionné
+    selectedAppliance = searchValue;
 
-  // Ajoute un gestionnaire d'événements pour supprimer l'option
-  closeIcon.addEventListener("click", () => {
-    // Supprime l'option sélectionnée du tableau
-    selectedOptions = selectedOptions.filter(
-      (option) => option !== selectedOptions
-    );
+    // Crée un nouvel élément HTML pour l'appareil sélectionné
+    const selectedOptionOption = document.createElement("p");
+    selectedOptionOption.textContent = searchValue;
+    selectedOptionOption.classList.add("selected-option-option");
+    selectedOptionOption.setAttribute("data-type", "appliance"); // Marque l'élément comme étant un appareil
+    selectedOptionDisplay.appendChild(selectedOptionOption);
 
-    // Supprime l'élément <p> de l'option sélectionnée
-    selectedOptionOption.remove();
+    // Ajoute un icône pour pouvoir retirer cette option
+    const closeIcon = document.createElement("i");
+    closeIcon.classList.add("fa-solid", "fa-x");
+    selectedOptionOption.appendChild(closeIcon);
 
-    // Met à jour les résultats basés sur la sélection restante
-    updateResultsBasedOnSelection();
-  });
+    // Ajoute un écouteur d'événement pour gérer la suppression de l'appareil sélectionné
+    closeIcon.addEventListener("click", () => {
+      // Réinitialise la variable selectedAppliance à null
+      selectedAppliance = null;
+      // Supprime l'élément HTML de l'appareil sélectionné
+      selectedOptionOption.remove();
+      // Met à jour les résultats en fonction des options restantes
+      updateResultsBasedOnSelection();
+    });
+  } else {
+    // Gère l'ajout des ingrédients et des ustensiles (si ce n'est pas un appareil)
+    if (!selectedOptions.includes(searchValue)) {
+      // Ajoute l'ingrédient ou l'ustensile sélectionné à la liste des options
+      selectedOptions.push(searchValue);
 
-  // Affiche les résultats finaux dans le DOM
-  // displayResults(results);
+      // Crée un nouvel élément HTML pour cet ingrédient ou ustensile
+      const selectedOptionOption = document.createElement("p");
+      selectedOptionOption.textContent = searchValue;
+      selectedOptionOption.classList.add("selected-option-option");
+      selectedOptionDisplay.appendChild(selectedOptionOption);
+
+      // Ajoute un icône pour pouvoir retirer cette option
+      const closeIcon = document.createElement("i");
+      closeIcon.classList.add("fa-solid", "fa-x");
+      selectedOptionOption.appendChild(closeIcon);
+
+      // Ajoute un écouteur d'événement pour gérer la suppression de cet ingrédient ou ustensile
+      closeIcon.addEventListener("click", () => {
+        // Supprime l'ingrédient ou l'ustensile sélectionné de la liste des options
+        selectedOptions = selectedOptions.filter(
+          (option) => option !== searchValue
+        );
+        // Supprime l'élément HTML correspondant
+        selectedOptionOption.remove();
+        // Met à jour les résultats en fonction des options restantes
+        updateResultsBasedOnSelection();
+      });
+    }
+  }
+
+  // Affiche les résultats de la recherche dans l'interface utilisateur
+  displayResults(results);
+
+  // Retourne les résultats de la recherche pour un éventuel usage futur
   return results;
 }
