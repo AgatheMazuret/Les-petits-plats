@@ -4,7 +4,15 @@ import { cardTemplate } from "./templates/card.js";
 import { recipes } from "./public/recipes.js";
 import { performSearch } from "./algorithmes/algorithme1.js";
 
+// Initialiser un tableau pour stocker les options sélectionnées
+const selectedOptions = {
+  ingredients: [],
+  ustensils: [],
+  appliance: null,
+};
+
 // ********************************* Nombre de recettes *******************************************
+
 // Fonction pour mettre à jour l'affichage du nombre de recettes
 function updateRecipeCount(count) {
   const recipeCount = document.querySelector(".nbr-recettes");
@@ -104,15 +112,8 @@ const btnSearch = document.querySelector(".search-btn");
 btnSearch.addEventListener("click", () => {
   // Récupère la valeur du champ de recherche, enlève les espaces au début et à la fin, et met tout en minuscules
   const searchValue = input.value.trim().toLowerCase();
-  const selectedOption = option.textContent;
 
-  // Vérifier si l'option est déjà sélectionnée
-  if (!selectedOptions.includes(selectedOption)) {
-    // Ajouter l'option sélectionnée au tableau
-    selectedOptions.push(selectedOption);
-  }
-
-  const results = performSearch(searchValue);
+  const results = performSearch(searchValue, selectedOptions);
   displayResults(results);
 });
 
@@ -125,7 +126,7 @@ input.addEventListener("keydown", (event) => {
     const searchValue = input.value.trim().toLowerCase();
 
     // Si c'est le cas, appelle la fonction performSearch pour lancer la recherche
-    const results = performSearch(searchValue);
+    const results = performSearch(searchValue, selectedOptions);
     displayResults(results);
   }
 });
@@ -136,24 +137,56 @@ input.addEventListener("keydown", (event) => {
 // // Sélectionner tous les éléments de dropdown
 const dropdownOptions = document.querySelectorAll(".dropdown-option");
 
-// Initialiser un tableau pour stocker les options sélectionnées
-let selectedOptions = [];
-
 // Ajouter un événement à chaque option du dropdown
 dropdownOptions.forEach((option) => {
   option.addEventListener("click", (event) => {
     const searchValue = event.target.textContent.toLowerCase();
     const selectedOption = option.textContent;
 
+    // TODO : récupérer le type de l'option pour mettre à jour la bonne clé dans selectedOptions
+
     // Vérifier si l'option est déjà sélectionnée
-    if (!selectedOptions.includes(selectedOption)) {
+    if (!selectedOptions.ustensils.includes(selectedOption)) {
       // Ajouter l'option sélectionnée au tableau
-      selectedOptions.push(selectedOption);
+      selectedOptions.ustensils.push(selectedOption);
     }
 
     // Appeler la fonction performSearch pour lancer la recherche avec les options sélectionnées
-    const results = performSearch(searchValue);
+    const results = performSearch(searchValue, selectedOptions);
     // Afficher les résultats de la recherche
     displayResults(results);
+
+    //  TODO : Créer une fonction template pour afficher les options sélectionnées
+
+    // Sélectionne l'élément dans le DOM où les options sélectionnées seront affichées
+    const selectedOptionDisplay = document.querySelector(
+      ".selected-option-display"
+    );
+
+    // Crée un nouvel élément HTML pour l'appareil sélectionné
+    const selectedOptionOption = document.createElement("p");
+    selectedOptionOption.textContent = selectedOption;
+    selectedOptionOption.classList.add("selected-option-option");
+    selectedOptionOption.setAttribute("data-type", "appliance"); // Marque l'élément comme étant un appareil
+    selectedOptionDisplay.appendChild(selectedOptionOption);
+
+    // Ajoute un icône pour pouvoir retirer cette option
+    const closeIcon = document.createElement("i");
+    closeIcon.classList.add("fa-solid", "fa-x");
+    selectedOptionOption.appendChild(closeIcon);
+
+    // Ajoute un écouteur d'événement pour gérer la suppression de l'appareil sélectionné
+    closeIcon.addEventListener("click", () => {
+      // TODO : Mettre à jour selectedOptions en fonction de l'élément supprimé
+      selectedOptions.ustensils = selectedOptions.ustensils.filter(
+        (option) => option !== selectedOption
+      );
+      // Supprime l'élément HTML de l'appareil sélectionné
+      selectedOptionOption.remove();
+      // Met à jour les résultats en fonction des options restantes
+      const results = performSearch(searchValue, selectedOptions);
+      // Afficher les résultats de la recherche
+      displayResults(results);
+    });
   });
 });

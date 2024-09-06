@@ -1,5 +1,4 @@
 import { recipes } from "../public/recipes.js";
-import { displayResults } from "../main.js";
 // *******************************************************Algorithme array********************************************************
 
 //******Recherche d'un ingrédient, d'une recette, d'un ustensile ou d'un appareil dans les recettes avec la search bar
@@ -7,19 +6,8 @@ import { displayResults } from "../main.js";
 // Crée un tableau vide pour stocker les recettes qui correspondent à la recherche
 let results = [];
 
-// Crée un tableau vide pour stocker les options sélectionnées (ingrédients, ustensiles)
-let selectedOptions = [];
-
-// Initialise une variable pour l'appareil sélectionné (par exemple : "four", "mixeur")
-let selectedAppliance = null;
-
-// Sélectionne l'élément dans le DOM où les options sélectionnées seront affichées
-const selectedOptionDisplay = document.querySelector(
-  ".selected-option-display"
-);
-
 // Fonction qui effectue la recherche de recettes en fonction de la valeur de recherche fournie
-export function performSearch(searchValue) {
+export function performSearch(searchValue, selectedOptions) {
   // Réinitialise les résultats à chaque nouvelle recherche
   results = [];
 
@@ -74,81 +62,6 @@ export function performSearch(searchValue) {
   }
 
   // Gère l'ajout de l'appareil sélectionné
-  if (
-    recipes.some((recipe) => recipe.appliance.toLowerCase() === searchValue)
-  ) {
-    // Vérifie si un appareil est déjà sélectionné
-    if (selectedAppliance) {
-      // Supprime l'ancien appareil sélectionné de la liste des options sélectionnées
-      selectedOptions = selectedOptions.filter(
-        (option) => option !== selectedAppliance
-      );
-      // Supprime l'élément correspondant à l'ancien appareil dans l'interface
-      const oldApplianceElement = document.querySelector(
-        `.selected-option-option[data-type="appliance"]`
-      );
-      if (oldApplianceElement) {
-        oldApplianceElement.remove();
-      }
-    }
-
-    // Met à jour la variable selectedAppliance avec le nouvel appareil sélectionné
-    selectedAppliance = searchValue;
-
-    // Crée un nouvel élément HTML pour l'appareil sélectionné
-    const selectedOptionOption = document.createElement("p");
-    selectedOptionOption.textContent = searchValue;
-    selectedOptionOption.classList.add("selected-option-option");
-    selectedOptionOption.setAttribute("data-type", "appliance"); // Marque l'élément comme étant un appareil
-    selectedOptionDisplay.appendChild(selectedOptionOption);
-
-    // Ajoute un icône pour pouvoir retirer cette option
-    const closeIcon = document.createElement("i");
-    closeIcon.classList.add("fa-solid", "fa-x");
-    selectedOptionOption.appendChild(closeIcon);
-
-    // Ajoute un écouteur d'événement pour gérer la suppression de l'appareil sélectionné
-    closeIcon.addEventListener("click", () => {
-      // Réinitialise la variable selectedAppliance à null
-      selectedAppliance = null;
-      // Supprime l'élément HTML de l'appareil sélectionné
-      selectedOptionOption.remove();
-      // Met à jour les résultats en fonction des options restantes
-      updateResultsBasedOnSelection();
-    });
-  } else {
-    // Gère l'ajout des ingrédients et des ustensiles (si ce n'est pas un appareil)
-    if (!selectedOptions.includes(searchValue)) {
-      // Ajoute l'ingrédient ou l'ustensile sélectionné à la liste des options
-      selectedOptions.push(searchValue);
-
-      // Crée un nouvel élément HTML pour cet ingrédient ou ustensile
-      const selectedOptionOption = document.createElement("p");
-      selectedOptionOption.textContent = searchValue;
-      selectedOptionOption.classList.add("selected-option-option");
-      selectedOptionDisplay.appendChild(selectedOptionOption);
-
-      // Ajoute un icône pour pouvoir retirer cette option
-      const closeIcon = document.createElement("i");
-      closeIcon.classList.add("fa-solid", "fa-x");
-      selectedOptionOption.appendChild(closeIcon);
-
-      // Ajoute un écouteur d'événement pour gérer la suppression de cet ingrédient ou ustensile
-      closeIcon.addEventListener("click", () => {
-        // Supprime l'ingrédient ou l'ustensile sélectionné de la liste des options
-        selectedOptions = selectedOptions.filter(
-          (option) => option !== searchValue
-        );
-        // Supprime l'élément HTML correspondant
-        selectedOptionOption.remove();
-        // Met à jour les résultats en fonction des options restantes
-        updateResultsBasedOnSelection();
-      });
-    }
-  }
-
-  // Affiche les résultats de la recherche dans l'interface utilisateur
-  displayResults(results);
 
   // Retourne les résultats de la recherche pour un éventuel usage futur
   return results;

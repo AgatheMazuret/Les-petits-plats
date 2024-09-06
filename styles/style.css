@@ -10,7 +10,7 @@ body {
 }
 
 header {
-  background-image: url(./public/images/image-de-fond-header.jpg);
+  background-image: url(/images/image-de-fond-header.jpg);
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
