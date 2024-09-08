@@ -134,150 +134,75 @@ input.addEventListener("keydown", (event) => {
 // ******************************************Filtres*************************************************************
 
 //************************** Recherche par dropdown**************************
-// Sélectionner tous les éléments ayant la classe "dropdown-option"
+// Sélectionner tous les éléments de dropdown
 const dropdownOptions = document.querySelectorAll(".dropdown-option");
 
-<<<<<<< HEAD
-// Fonction pour ajouter une option sélectionnée dans "selectedOptions"
+// Fonction pour mettre à jour selectedOptions
 function updateSelectedOptions(type, selectedOption) {
-  // Vérifier si le type existe déjà dans "selectedOptions"
   if (selectedOptions[type]) {
-    // Si l'option n'est pas déjà dans le tableau, l'ajouter
     if (!selectedOptions[type].includes(selectedOption)) {
       selectedOptions[type].push(selectedOption);
-=======
-// Ajouter un événement à chaque option du dropdown
-dropdownOptions.forEach((option) => {
-  option.addEventListener("click", (event) => {
-    const searchValue = event.target.textContent.toLowerCase();
-    const selectedOption = option.textContent;
-
-    // TODO : récupérer le type de l'option pour mettre à jour la bonne clé dans selectedOptions
-
-    // Vérifier si l'option est déjà sélectionnée
-    if (!selectedOptions.ustensils.includes(selectedOption)) {
-      // Ajouter l'option sélectionnée au tableau
-      selectedOptions.ustensils.push(selectedOption);
->>>>>>> 1535b7a54ea5183d4a1b45b9be64c5437197e880
     }
   } else {
-    // Si le type n'existe pas, afficher une erreur
     console.error("Type d'option inconnu : ", type);
   }
 }
 
-<<<<<<< HEAD
-// Fonction pour retirer une option sélectionnée dans "selectedOptions"
+// Fonction pour retirer une option sélectionnée
 function removeSelectedOption(type, selectedOption) {
-  // Vérifier si le type existe dans "selectedOptions"
   if (selectedOptions[type]) {
-    // Trouver l'index de l'option dans le tableau
     const index = selectedOptions[type].indexOf(selectedOption);
-    // Si l'option existe, la retirer du tableau
     if (index > -1) {
       selectedOptions[type].splice(index, 1);
     }
   } else {
-    // Si le type n'existe pas, afficher une erreur
     console.error("Type d'option inconnu : ", type);
   }
 }
 
-// Fonction pour afficher une option sélectionnée dans l'interface utilisateur
+// Fonction pour afficher les options sélectionnées
 function templateOptions(
   selectedOption,
   containerSelector = ".selected-option-display"
 ) {
-  // Sélectionner l'élément du DOM où afficher les options sélectionnées
   const selectedOptionDisplay = document.querySelector(containerSelector);
 
-  // Vérifier si l'élément d'affichage existe
   if (!selectedOptionDisplay) {
     console.error("Le conteneur spécifié est introuvable.");
     return;
   }
 
-  // Créer un élément HTML pour afficher l'option sélectionnée
   const selectedOptionElement = document.createElement("p");
   selectedOptionElement.textContent = selectedOption;
   selectedOptionElement.classList.add("selected-option-option");
   selectedOptionElement.setAttribute("data-type", "appliance");
   selectedOptionDisplay.appendChild(selectedOptionElement);
 
-  // Créer une icône de suppression pour chaque option
   const closeIcon = document.createElement("i");
   closeIcon.classList.add("fa-solid", "fa-x");
   selectedOptionElement.appendChild(closeIcon);
 
-  // Ajouter un événement pour supprimer l'option lorsqu'on clique sur l'icône
+  // Gérer la suppression de l'option
   closeIcon.addEventListener("click", () => {
-    // Retirer l'option sélectionnée de "selectedOptions"
     removeSelectedOption("appliance", selectedOption);
-    // Retirer l'élément HTML de l'affichage
     selectedOptionElement.remove();
-    // Mettre à jour la recherche avec les nouvelles options sélectionnées
-    const searchValue = ""; // Vous pouvez récupérer la valeur de recherche ici
+    const searchValue = ""; // Assurez-vous de récupérer la bonne valeur de recherche ici
     const results = performSearch(searchValue, selectedOptions);
-    // Afficher les résultats mis à jour
-=======
-    // Appeler la fonction performSearch pour lancer la recherche avec les options sélectionnées
-    const results = performSearch(searchValue, selectedOptions);
-    // Afficher les résultats de la recherche
->>>>>>> 1535b7a54ea5183d4a1b45b9be64c5437197e880
     displayResults(results);
-
-    //  TODO : Créer une fonction template pour afficher les options sélectionnées
-
-    // Sélectionne l'élément dans le DOM où les options sélectionnées seront affichées
-    const selectedOptionDisplay = document.querySelector(
-      ".selected-option-display"
-    );
-
-    // Crée un nouvel élément HTML pour l'appareil sélectionné
-    const selectedOptionOption = document.createElement("p");
-    selectedOptionOption.textContent = selectedOption;
-    selectedOptionOption.classList.add("selected-option-option");
-    selectedOptionOption.setAttribute("data-type", "appliance"); // Marque l'élément comme étant un appareil
-    selectedOptionDisplay.appendChild(selectedOptionOption);
-
-    // Ajoute un icône pour pouvoir retirer cette option
-    const closeIcon = document.createElement("i");
-    closeIcon.classList.add("fa-solid", "fa-x");
-    selectedOptionOption.appendChild(closeIcon);
-
-    // Ajoute un écouteur d'événement pour gérer la suppression de l'appareil sélectionné
-    closeIcon.addEventListener("click", () => {
-      // TODO : Mettre à jour selectedOptions en fonction de l'élément supprimé
-      selectedOptions.ustensils = selectedOptions.ustensils.filter(
-        (option) => option !== selectedOption
-      );
-      // Supprime l'élément HTML de l'appareil sélectionné
-      selectedOptionOption.remove();
-      // Met à jour les résultats en fonction des options restantes
-      const results = performSearch(searchValue, selectedOptions);
-      // Afficher les résultats de la recherche
-      displayResults(results);
-    });
   });
 }
 
-// Ajouter un événement "click" à chaque option du dropdown
+// Ajouter un événement à chaque option du dropdown
 dropdownOptions.forEach((option) => {
   option.addEventListener("click", (event) => {
-    // Récupérer la valeur cliquée et la convertir en minuscules
     const searchValue = event.target.textContent.toLowerCase();
-    // Obtenir le texte de l'option sélectionnée
     const selectedOption = option.textContent;
 
-    // Ajouter l'option sélectionnée à "selectedOptions"
     updateSelectedOptions("appliance", selectedOption);
 
-    // Lancer la recherche avec les options sélectionnées
     const results = performSearch(searchValue, selectedOptions);
-    // Afficher les résultats de la recherche
     displayResults(results);
 
-    // Afficher l'option sélectionnée dans l'interface utilisateur
     templateOptions(selectedOption);
   });
 });
