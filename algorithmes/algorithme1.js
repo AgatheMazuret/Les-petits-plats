@@ -6,9 +6,15 @@ import { recipes } from "../public/recipes.js";
 // Crée un tableau vide pour stocker les résultats
 let results = [];
 
+<<<<<<< HEAD
 // Fonction qui effectue la recherche
 export function performSearch(searchValue) {
   // Réinitialise les résultats
+=======
+// Fonction qui effectue la recherche de recettes en fonction de la valeur de recherche fournie
+export function performSearch(searchValue, selectedOptions) {
+  // Réinitialise les résultats à chaque nouvelle recherche
+>>>>>>> 1535b7a54ea5183d4a1b45b9be64c5437197e880
   results = [];
 
   // Filtrer les recettes en fonction des ingrédients, ustensiles et appareils
@@ -42,6 +48,24 @@ export function performSearch(searchValue) {
   // Assigner les recettes filtrées aux résultats
   results = filteredRecipes;
 
+<<<<<<< HEAD
   // Retourner les résultats pour un usage futur
+=======
+  // Fonction qui met à jour les résultats en fonction des options sélectionnées (ingrédients, ustensiles, appareils)
+  function updateResultsBasedOnSelection() {
+    // Récupère toutes les options sélectionnées dans l'interface utilisateur et les convertit en minuscules
+    const selectedOptions = Array.from(
+      document.querySelectorAll(".selected-option-option")
+    ).map((option) => option.textContent.toLowerCase());
+
+    // Re-effectue la recherche avec les options sélectionnées et affiche les résultats
+    const results = performSearch(selectedOptions.join(" "));
+    displayResults(results);
+  }
+
+  // Gère l'ajout de l'appareil sélectionné
+
+  // Retourne les résultats de la recherche pour un éventuel usage futur
+>>>>>>> 1535b7a54ea5183d4a1b45b9be64c5437197e880
   return results;
 }

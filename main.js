@@ -137,6 +137,7 @@ input.addEventListener("keydown", (event) => {
 // Sélectionner tous les éléments ayant la classe "dropdown-option"
 const dropdownOptions = document.querySelectorAll(".dropdown-option");
 
+<<<<<<< HEAD
 // Fonction pour ajouter une option sélectionnée dans "selectedOptions"
 function updateSelectedOptions(type, selectedOption) {
   // Vérifier si le type existe déjà dans "selectedOptions"
@@ -144,6 +145,20 @@ function updateSelectedOptions(type, selectedOption) {
     // Si l'option n'est pas déjà dans le tableau, l'ajouter
     if (!selectedOptions[type].includes(selectedOption)) {
       selectedOptions[type].push(selectedOption);
+=======
+// Ajouter un événement à chaque option du dropdown
+dropdownOptions.forEach((option) => {
+  option.addEventListener("click", (event) => {
+    const searchValue = event.target.textContent.toLowerCase();
+    const selectedOption = option.textContent;
+
+    // TODO : récupérer le type de l'option pour mettre à jour la bonne clé dans selectedOptions
+
+    // Vérifier si l'option est déjà sélectionnée
+    if (!selectedOptions.ustensils.includes(selectedOption)) {
+      // Ajouter l'option sélectionnée au tableau
+      selectedOptions.ustensils.push(selectedOption);
+>>>>>>> 1535b7a54ea5183d4a1b45b9be64c5437197e880
     }
   } else {
     // Si le type n'existe pas, afficher une erreur
@@ -151,6 +166,7 @@ function updateSelectedOptions(type, selectedOption) {
   }
 }
 
+<<<<<<< HEAD
 // Fonction pour retirer une option sélectionnée dans "selectedOptions"
 function removeSelectedOption(type, selectedOption) {
   // Vérifier si le type existe dans "selectedOptions"
@@ -203,7 +219,45 @@ function templateOptions(
     const searchValue = ""; // Vous pouvez récupérer la valeur de recherche ici
     const results = performSearch(searchValue, selectedOptions);
     // Afficher les résultats mis à jour
+=======
+    // Appeler la fonction performSearch pour lancer la recherche avec les options sélectionnées
+    const results = performSearch(searchValue, selectedOptions);
+    // Afficher les résultats de la recherche
+>>>>>>> 1535b7a54ea5183d4a1b45b9be64c5437197e880
     displayResults(results);
+
+    //  TODO : Créer une fonction template pour afficher les options sélectionnées
+
+    // Sélectionne l'élément dans le DOM où les options sélectionnées seront affichées
+    const selectedOptionDisplay = document.querySelector(
+      ".selected-option-display"
+    );
+
+    // Crée un nouvel élément HTML pour l'appareil sélectionné
+    const selectedOptionOption = document.createElement("p");
+    selectedOptionOption.textContent = selectedOption;
+    selectedOptionOption.classList.add("selected-option-option");
+    selectedOptionOption.setAttribute("data-type", "appliance"); // Marque l'élément comme étant un appareil
+    selectedOptionDisplay.appendChild(selectedOptionOption);
+
+    // Ajoute un icône pour pouvoir retirer cette option
+    const closeIcon = document.createElement("i");
+    closeIcon.classList.add("fa-solid", "fa-x");
+    selectedOptionOption.appendChild(closeIcon);
+
+    // Ajoute un écouteur d'événement pour gérer la suppression de l'appareil sélectionné
+    closeIcon.addEventListener("click", () => {
+      // TODO : Mettre à jour selectedOptions en fonction de l'élément supprimé
+      selectedOptions.ustensils = selectedOptions.ustensils.filter(
+        (option) => option !== selectedOption
+      );
+      // Supprime l'élément HTML de l'appareil sélectionné
+      selectedOptionOption.remove();
+      // Met à jour les résultats en fonction des options restantes
+      const results = performSearch(searchValue, selectedOptions);
+      // Afficher les résultats de la recherche
+      displayResults(results);
+    });
   });
 }
 
