@@ -94,21 +94,20 @@ button .fa-magnifying-glass {
   display: flex;
   align-items: center;
   margin-top: 50px;
-  gap: 460px;
 }
 
 .filters h2 {
   font-size: 21px;
   font-family: Anton;
+  margin-left: auto;
+  margin-right: 102px;
 }
 
 .dropdown-container {
   display: flex;
   align-items: center;
-}
-
-.dropdown {
-  margin-left: 80px;
+  margin-left: 110px;
+  gap: 70px;
 }
 
 .dropdown-button {
@@ -181,7 +180,7 @@ button .fa-magnifying-glass {
 .selected-option-display {
   display: flex;
   flex-wrap: wrap;
-  margin-left: 160px;
+  margin-left: 110px;
   gap: 20px;
 }
 

@@ -21,6 +21,7 @@ function updateRecipeCount(count) {
 // ********************************* Affichage des recettes dans le DOM  *******************************************
 // fonction pour intégrer le résultat de la recherche dans le DOM
 export function displayResults(results) {
+  console.log(selectedOptions);
   // Sélectionne la section des recettes
   const recipesSection = document.querySelector(".cards");
 
@@ -134,34 +135,29 @@ input.addEventListener("keydown", (event) => {
 // ******************************************Filtres*************************************************************
 
 //************************** Recherche par dropdown**************************
-// Sélectionner tous les éléments de dropdown
-const dropdownOptions = document.querySelectorAll(".dropdown-option");
 
-// Fonction pour mettre à jour selectedOptions
-function updateSelectedOptions(type, selectedOption) {
-  if (selectedOptions[type]) {
-    if (!selectedOptions[type].includes(selectedOption)) {
-      selectedOptions[type].push(selectedOption);
-    }
-  } else {
-    console.error("Type d'option inconnu : ", type);
-  }
-}
-
-// Fonction pour retirer une option sélectionnée
+// Fonction pour retirer une option sélectionnée d'un type donné
 function removeSelectedOption(type, selectedOption) {
-  if (selectedOptions[type]) {
+  // Vérifie si le type d'option existe déjà dans selectedOptions
+  if (selectedOptions[type] && Array.isArray(selectedOptions[type])) {
+    // Trouve l'index de l'option dans la liste (si elle existe)
     const index = selectedOptions[type].indexOf(selectedOption);
+    // Si l'option est trouvée (index > -1), on la retire de la liste
     if (index > -1) {
-      selectedOptions[type].splice(index, 1);
+      selectedOptions[type].splice(index, 1); // Retire l'option à l'index trouvé
     }
+  } else if (selectedOptions[type]) {
+    // Si le type existe mais n'est pas un tableau (ex. appliance), on le remet à null
+    selectedOptions[type] = null;
   } else {
+    // Si le type n'existe pas, affiche un message d'erreur
     console.error("Type d'option inconnu : ", type);
   }
 }
 
 // Fonction pour afficher les options sélectionnées
 function templateOptions(
+  type,
   selectedOption,
   containerSelector = ".selected-option-display"
 ) {
@@ -175,7 +171,7 @@ function templateOptions(
   const selectedOptionElement = document.createElement("p");
   selectedOptionElement.textContent = selectedOption;
   selectedOptionElement.classList.add("selected-option-option");
-  selectedOptionElement.setAttribute("data-type", "appliance");
+  selectedOptionElement.setAttribute("data-type", type);
   selectedOptionDisplay.appendChild(selectedOptionElement);
 
   const closeIcon = document.createElement("i");
@@ -184,25 +180,83 @@ function templateOptions(
 
   // Gérer la suppression de l'option
   closeIcon.addEventListener("click", () => {
-    removeSelectedOption("appliance", selectedOption);
+    removeSelectedOption(type, selectedOption);
     selectedOptionElement.remove();
-    const searchValue = ""; // Assurez-vous de récupérer la bonne valeur de recherche ici
+
+    const searchValue = input.value.trim().toLowerCase();
     const results = performSearch(searchValue, selectedOptions);
     displayResults(results);
   });
 }
+// Sélectionner tous les éléments de dropdown
+const dropdownOptionsIngredients = document.querySelectorAll(
+  "#ingredients.dropdown .dropdown-option"
+);
 
-// Ajouter un événement à chaque option du dropdown
-dropdownOptions.forEach((option) => {
+// Ajouter un événement de clic à chaque option du menu déroulant
+dropdownOptionsIngredients.forEach((option) => {
+  // Lorsque l'utilisateur clique sur une option
   option.addEventListener("click", (event) => {
-    const searchValue = event.target.textContent.toLowerCase();
-    const selectedOption = option.textContent;
+    // Obtenir la valeur du texte de l'option cliquée en minuscules
+    const searchValue = input.value.trim().toLowerCase();
+    // Obtenir le texte de l'option sélectionnée
+    selectedOptions.ingredients.push(option.textContent);
+    option.style.backgroundColor = "#ffd15b";
 
-    updateSelectedOptions("appliance", selectedOption);
-
+    // Effectuer une recherche avec la valeur obtenue et les options sélectionnées
     const results = performSearch(searchValue, selectedOptions);
+    // Afficher les résultats de la recherche
     displayResults(results);
 
-    templateOptions(selectedOption);
+    // Appliquer un modèle à l'option sélectionnée
+    templateOptions("ingredients", option.textContent);
+  });
+});
+
+// Sélectionner tous les éléments de dropdown
+const dropdownOptionsAppliance = document.querySelectorAll(
+  "#appliance.dropdown .dropdown-option"
+);
+
+// Ajouter un événement de clic à chaque option du menu déroulant
+dropdownOptionsAppliance.forEach((option) => {
+  // Lorsque l'utilisateur clique sur une option
+  option.addEventListener("click", (event) => {
+    // Obtenir la valeur du texte de l'option cliquée en minuscules
+    const searchValue = input.value.trim().toLowerCase();
+    // Obtenir le texte de l'option sélectionnée
+    selectedOptions.appliance = option.textContent;
+
+    // Effectuer une recherche avec la valeur obtenue et les options sélectionnées
+    const results = performSearch(searchValue, selectedOptions);
+    // Afficher les résultats de la recherche
+    displayResults(results);
+
+    // Appliquer un modèle à l'option sélectionnée
+    templateOptions("appliance", option.textContent);
+  });
+});
+
+// Sélectionner tous les éléments de dropdown
+const dropdownOptionsUstensils = document.querySelectorAll(
+  "#ustensils.dropdown .dropdown-option"
+);
+
+// Ajouter un événement de clic à chaque option du menu déroulant
+dropdownOptionsUstensils.forEach((option) => {
+  // Lorsque l'utilisateur clique sur une option
+  option.addEventListener("click", (event) => {
+    // Obtenir la valeur du texte de l'option cliquée en minuscules
+    const searchValue = input.value.trim().toLowerCase();
+    // Obtenir le texte de l'option sélectionnée
+    selectedOptions.ustensils.push(option.textContent);
+
+    // Effectuer une recherche avec la valeur obtenue et les options sélectionnées
+    const results = performSearch(searchValue, selectedOptions);
+    // Afficher les résultats de la recherche
+    displayResults(results);
+
+    // Appliquer un modèle à l'option sélectionnée
+    templateOptions("ustensils", option.textContent);
   });
 });
