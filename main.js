@@ -134,23 +134,18 @@ input.addEventListener("keydown", (event) => {
 
 // ******************************************Filtres*************************************************************
 
-//************************** Recherche par dropdown**************************
+// ************************** Recherche par dropdown **************************
 
 // Fonction pour retirer une option sélectionnée d'un type donné
 function removeSelectedOption(type, selectedOption) {
-  // Vérifie si le type d'option existe déjà dans selectedOptions
   if (selectedOptions[type] && Array.isArray(selectedOptions[type])) {
-    // Trouve l'index de l'option dans la liste (si elle existe)
     const index = selectedOptions[type].indexOf(selectedOption);
-    // Si l'option est trouvée (index > -1), on la retire de la liste
     if (index > -1) {
-      selectedOptions[type].splice(index, 1); // Retire l'option à l'index trouvé
+      selectedOptions[type].splice(index, 1);
     }
   } else if (selectedOptions[type]) {
-    // Si le type existe mais n'est pas un tableau (ex. appliance), on le remet à null
     selectedOptions[type] = null;
   } else {
-    // Si le type n'existe pas, affiche un message d'erreur
     console.error("Type d'option inconnu : ", type);
   }
 }
@@ -178,7 +173,6 @@ function templateOptions(
   closeIcon.classList.add("fa-solid", "fa-x");
   selectedOptionElement.appendChild(closeIcon);
 
-  // Gérer la suppression de l'option
   closeIcon.addEventListener("click", () => {
     removeSelectedOption(type, selectedOption);
     selectedOptionElement.remove();
@@ -188,75 +182,226 @@ function templateOptions(
     displayResults(results);
   });
 }
-// Sélectionner tous les éléments de dropdown
+
+// Fonction pour déplacer l'option sélectionnée juste en dessous de "dropdown-search"
+function moveOptionBelowSearch(option, dropdown) {
+  const dropdownSearch = dropdown.querySelector(".dropdown-search"); // Use querySelector instead of querySelectorAll
+  if (dropdownSearch) {
+    option.remove(); // Retirer l'option de sa position actuelle
+    dropdownSearch.insertAdjacentElement("afterend", option); // Insérer l'option après l'élément "dropdown-search"
+    option.style.display = "none"; // Masquer l'option une fois déplacée
+  } else {
+    console.error(
+      'L\'élément ".dropdown-search" est introuvable dans le dropdown.'
+    );
+  }
+}
+
+// Sélectionner tous les éléments de dropdown pour les ingrédients
 const dropdownOptionsIngredients = document.querySelectorAll(
   "#ingredients.dropdown .dropdown-option"
 );
 
-// Ajouter un événement de clic à chaque option du menu déroulant
-dropdownOptionsIngredients.forEach((option) => {
-  // Lorsque l'utilisateur clique sur une option
-  option.addEventListener("click", (event) => {
-    // Obtenir la valeur du texte de l'option cliquée en minuscules
+// Fonction pour insérer un élément sélectionné après le champ de recherche
+function insertSelectedItemAfterSearch(
+  selectedText,
+  dropdownSearchSelector = ".dropdown-search",
+  option,
+  originalIndex
+) {
+  // Créer un élément div avec le texte sélectionné
+  const selectedItem = document.createElement("div");
+  selectedItem.textContent = selectedText;
+  selectedItem.classList.add("option-search");
+
+  // Créer l'icône de fermeture
+  const closeIcon = document.createElement("i");
+  closeIcon.classList.add("fa-solid", "fa-x");
+
+  // Ajouter l'icône de fermeture à l'élément
+  selectedItem.appendChild(closeIcon);
+
+  // Ajouter un événement de clic pour supprimer l'élément et réafficher l'option dans le dropdown
+  closeIcon.addEventListener("click", () => {
+    selectedItem.remove(); // Supprimer l'élément de la liste des éléments sélectionnés
+
+    // Réafficher et replacer l'option dans le dropdown à sa position d'origine
+    const dropdown = document.querySelector("#ingredients.dropdown");
+    const dropdownOptions = dropdown.querySelectorAll(".dropdown-option");
+
+    // Réinsérer l'option à son index d'origine
+    if (dropdownOptions[originalIndex]) {
+      dropdownOptions[originalIndex].insertAdjacentElement(
+        "beforebegin",
+        option
+      );
+    } else {
+      dropdown.appendChild(option); // Si aucune option n'est trouvée, ajouter à la fin
+    }
+
+    option.style.display = "block"; // Remettre l'option visible dans le dropdown
+
+    // Retirer l'option des `selectedOptions`
+    const index = selectedOptions.ingredients.indexOf(selectedText);
+    if (index > -1) {
+      selectedOptions.ingredients.splice(index, 1); // Retirer l'option du tableau des options sélectionnées
+    }
+
+    // Refaire la recherche et afficher les résultats
     const searchValue = input.value.trim().toLowerCase();
-    // Obtenir le texte de l'option sélectionnée
-    selectedOptions.ingredients.push(option.textContent);
-    option.style.backgroundColor = "#ffd15b";
-
-    // Effectuer une recherche avec la valeur obtenue et les options sélectionnées
     const results = performSearch(searchValue, selectedOptions);
-    // Afficher les résultats de la recherche
     displayResults(results);
+  });
 
-    // Appliquer un modèle à l'option sélectionnée
-    templateOptions("ingredients", option.textContent);
+  // Rechercher l'élément dropdown-search correspondant
+  const inputDropdownSearch = document.querySelector(dropdownSearchSelector);
+
+  // Vérifier si l'élément existe, puis insérer l'élément sélectionné juste après
+  if (inputDropdownSearch) {
+    inputDropdownSearch.insertAdjacentElement("afterend", selectedItem);
+  } else {
+    console.error(
+      `L'élément ${dropdownSearchSelector} n'existe pas dans le DOM.`
+    );
+  }
+}
+
+// Ajouter un événement de clic à chaque option du menu déroulant pour les ingrédients
+dropdownOptionsIngredients.forEach((option, index) => {
+  option.addEventListener("click", (event) => {
+    const selectedText = option.textContent.trim();
+
+    // Vérifier si l'option n'est pas déjà sélectionnée
+    if (!selectedOptions.ingredients.includes(selectedText)) {
+      selectedOptions.ingredients.push(selectedText);
+
+      // Stocker l'index d'origine de l'option
+      const originalIndex = Array.from(dropdownOptionsIngredients).indexOf(
+        option
+      );
+
+      insertSelectedItemAfterSearch(
+        selectedText,
+        ".dropdown-search",
+        option,
+        originalIndex
+      );
+
+      const searchValue = input.value.trim().toLowerCase();
+      const results = performSearch(searchValue, selectedOptions);
+      displayResults(results);
+
+      templateOptions("ingredients", selectedText);
+
+      // Remonter l'option sélectionnée juste en dessous du champ de recherche et la masquer
+      const dropdown = document.querySelector("#ingredients.dropdown");
+      moveOptionBelowSearch(option, dropdown);
+    }
   });
 });
 
-// Sélectionner tous les éléments de dropdown
+// Sélectionner tous les éléments de dropdown pour les appareils
 const dropdownOptionsAppliance = document.querySelectorAll(
   "#appliance.dropdown .dropdown-option"
 );
-
-// Ajouter un événement de clic à chaque option du menu déroulant
-dropdownOptionsAppliance.forEach((option) => {
-  // Lorsque l'utilisateur clique sur une option
+// Ajouter un événement de clic à chaque option du menu déroulant pour les appareils
+dropdownOptionsAppliance.forEach((option, index) => {
   option.addEventListener("click", (event) => {
-    // Obtenir la valeur du texte de l'option cliquée en minuscules
-    const searchValue = input.value.trim().toLowerCase();
-    // Obtenir le texte de l'option sélectionnée
-    selectedOptions.appliance = option.textContent;
+    const selectedText = option.textContent.trim();
 
-    // Effectuer une recherche avec la valeur obtenue et les options sélectionnées
-    const results = performSearch(searchValue, selectedOptions);
-    // Afficher les résultats de la recherche
-    displayResults(results);
+    // Vérifier si l'option n'est pas déjà sélectionnée
+    if (
+      !selectedOptions.appliance ||
+      selectedOptions.appliance !== selectedText
+    ) {
+      selectedOptions.appliance = selectedText;
 
-    // Appliquer un modèle à l'option sélectionnée
-    templateOptions("appliance", option.textContent);
+      // Stocker l'index d'origine de l'option
+      const originalIndex = Array.from(dropdownOptionsAppliance).indexOf(
+        option
+      );
+
+      insertSelectedItemAfterSearch(
+        selectedText,
+        "#appliance.dropdown",
+        option,
+        originalIndex
+      );
+
+      const searchValue = input.value.trim().toLowerCase();
+      const results = performSearch(searchValue, selectedOptions);
+      displayResults(results);
+
+      templateOptions("appliance", selectedText);
+
+      // Filtrer les options pour afficher uniquement l'option sélectionnée
+      filterDropdownOptions(selectedText);
+    }
   });
 });
 
-// Sélectionner tous les éléments de dropdown
+function filterDropdownOptions(selectedText) {
+  dropdownOptionsAppliance.forEach((option) => {
+    if (option.textContent.trim() === selectedText) {
+      option.style.display = "block"; // Afficher l'option sélectionnée
+    } else {
+      option.style.display = "none"; // Masquer les autres options
+    }
+  });
+}
+
+// Sélectionner tous les éléments de dropdown pour les ustensiles
 const dropdownOptionsUstensils = document.querySelectorAll(
   "#ustensils.dropdown .dropdown-option"
 );
 
-// Ajouter un événement de clic à chaque option du menu déroulant
+// Ajouter un événement de clic à chaque option du menu déroulant pour les ustensiles
 dropdownOptionsUstensils.forEach((option) => {
-  // Lorsque l'utilisateur clique sur une option
   option.addEventListener("click", (event) => {
-    // Obtenir la valeur du texte de l'option cliquée en minuscules
     const searchValue = input.value.trim().toLowerCase();
-    // Obtenir le texte de l'option sélectionnée
     selectedOptions.ustensils.push(option.textContent);
 
-    // Effectuer une recherche avec la valeur obtenue et les options sélectionnées
+    // Stocker l'index d'origine de l'option
+    const originalIndex = Array.from(dropdownOptionsUstensils).indexOf(option);
+
+    insertSelectedItemAfterSearch(
+      option.textContent,
+      "#ustensils.dropdown",
+      option,
+      originalIndex
+    );
+
     const results = performSearch(searchValue, selectedOptions);
-    // Afficher les résultats de la recherche
     displayResults(results);
 
-    // Appliquer un modèle à l'option sélectionnée
     templateOptions("ustensils", option.textContent);
+
+    // Remonter l'option sélectionnée en haut du dropdown
+    const dropdown = document.querySelector("#ustensils.dropdown");
+    moveOptionBelowSearch(option, dropdown);
+  });
+});
+
+// ************************** Recherche par input **************************
+
+// Sélectionner toutes les entrées de recherche dans les dropdowns
+const dropdownSearches = document.querySelectorAll(".dropdown-search");
+
+// Ajouter un événement de saisie à chaque élément de recherche
+dropdownSearches.forEach((dropdownSearch) => {
+  dropdownSearch.addEventListener("input", (event) => {
+    const searchValue = event.target.value.trim().toLowerCase();
+
+    const dropdownOptions =
+      dropdownSearch.parentElement.querySelectorAll(".dropdown-option");
+
+    dropdownOptions.forEach((option) => {
+      const optionText = option.textContent.toLowerCase();
+      if (optionText.includes(searchValue)) {
+        option.style.display = "block";
+      } else {
+        option.style.display = "none";
+      }
+    });
   });
 });

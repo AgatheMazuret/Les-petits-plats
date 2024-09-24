@@ -177,6 +177,18 @@ button .fa-magnifying-glass {
   cursor: pointer;
 }
 
+.option-search {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  padding: 10px 0 10px 0;
+  font-size: 14px;
+  background-color: #ffd15b;
+}
+
 .selected-option-display {
   display: flex;
   flex-wrap: wrap;
