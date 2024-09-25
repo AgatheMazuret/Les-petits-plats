@@ -36,6 +36,7 @@ export function performSearch(searchValue, selectedOptions) {
     // Filtrer selon les ustensiles sélectionnés
     const ustensilsMatch =
       selectedOptions.ustensils.length === 0 ||
+      // changer every et some
       selectedOptions.ustensils.every((ustensil) =>
         recipe.ustensils.some((recipeUstensil) =>
           recipeUstensil.toLowerCase().includes(ustensil.toLowerCase())
