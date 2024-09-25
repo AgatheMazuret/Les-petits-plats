@@ -48,5 +48,11 @@ export function performSearch(searchValue, selectedOptions) {
     return ingredientsMatch && ustensilsMatch && applianceMatch;
   });
 
+  // Vérifier si aucune recette n'a été trouvée
+  if (selectedRecipes.length === 0) {
+    console.error("Aucune recette trouvée pour votre recherche."); // Afficher dans la console
+    alert("Aucune recette trouvée pour votre recherche."); // Afficher un message d'alerte à l'utilisateur
+  }
+
   return selectedRecipes;
 }

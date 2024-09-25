@@ -104,7 +104,6 @@ dropdowns.forEach((dropdown) => {
 //On récupère la valeur de l'input
 // Sélectionne l'élément du champ de recherche dans le HTML
 const input = document.querySelector(".search-input");
-
 // Sélectionne le bouton de recherche dans le HTML
 const btnSearch = document.querySelector(".search-btn");
 
@@ -113,6 +112,9 @@ const btnSearch = document.querySelector(".search-btn");
 btnSearch.addEventListener("click", () => {
   // Récupère la valeur du champ de recherche, enlève les espaces au début et à la fin, et met tout en minuscules
   const searchValue = input.value.trim().toLowerCase();
+
+  // Crée une option avec templateOptions
+  templateOptions("search", searchValue);
 
   const results = performSearch(searchValue, selectedOptions);
   displayResults(results);
@@ -125,6 +127,9 @@ input.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     // Récupère la valeur du champ de recherche, enlève les espaces au début et à la fin, et met tout en minuscules
     const searchValue = input.value.trim().toLowerCase();
+
+    // Crée une option avec templateOptions
+    templateOptions("search", searchValue);
 
     // Si c'est le cas, appelle la fonction performSearch pour lancer la recherche
     const results = performSearch(searchValue, selectedOptions);
