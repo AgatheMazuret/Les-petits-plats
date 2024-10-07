@@ -106,7 +106,7 @@ button .fa-magnifying-glass {
 .dropdown-container {
   display: flex;
   align-items: center;
-  margin-left: 110px;
+  margin-left: 50px;
   gap: 70px;
 }
 
@@ -116,7 +116,7 @@ button .fa-magnifying-glass {
   background-color: white;
   border: none;
   border-radius: 11px;
-  padding-left: 30px;
+  padding-left: 20px;
   width: 179px;
   height: 56px;
   cursor: pointer;
@@ -167,10 +167,18 @@ button .fa-magnifying-glass {
   color: #c6c6c6;
 }
 
+.selected-option-dropdown {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 163px;
+  height: 36px;
+  background-color: #ffd15b;
+}
+
 .dropdown-option {
   color: black;
-  width: 163px;
-  padding: 12px 16px;
+  padding: 5px 10px;
   border: none;
   background-color: white;
   display: block;
