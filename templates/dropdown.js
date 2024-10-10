@@ -38,19 +38,16 @@ export function createDropdown(containerId, buttonText, options) {
   searchIcon.classList.add("fa-solid", "fa-search", "icon-grey");
   searchButton.appendChild(searchIcon);
 
+  // Crer un conteneur pour les options séléectionées
+  const selectedOptionsContainer = document.createElement("div");
+  selectedOptionsContainer.classList.add("selected-options-container");
+
   // Créer un conteneur pour les options avec défilement
   const optionsContainer = document.createElement("div");
   optionsContainer.classList.add("options-container");
 
-  // Ajouter les options au conteneur d'options
-  options.forEach((option) => {
-    const dropdownOption = document.createElement("button");
-    dropdownOption.classList.add("dropdown-option");
-    dropdownOption.textContent = option;
-    optionsContainer.appendChild(dropdownOption);
-  });
-
   // Ajouter le conteneur d'options au dropdownContent
+  dropdownContent.appendChild(selectedOptionsContainer);
   dropdownContent.appendChild(optionsContainer);
 
   // Ajouter les éléments au DOM

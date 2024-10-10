@@ -25,23 +25,63 @@ export function performSearch(searchValue, selectedOptions) {
     // Filtrer selon les ingrédients sélectionnés
     const ingredientsMatch =
       selectedOptions.ingredients.length === 0 ||
-      selectedOptions.ingredients.every((ingredient) =>
-        recipe.ingredients.some((recipeIngredient) =>
-          recipeIngredient.ingredient
-            .toLowerCase()
-            .includes(ingredient.toLowerCase())
-        )
-      );
+      (() => {
+        // Itérer sur selectedOptions.ingredients
+        for (let i = 0; i < selectedOptions.ingredients.length; i++) {
+          let ingredient = selectedOptions.ingredients[i];
+          let matchFound = false;
+
+          // Itérer sur recipe.ingrédients
+          for (let j = 0; j < recipe.ingredients.length; j++) {
+            let recipeIngredient = recipe.ingredients[j];
+
+            //Vérifier si il y a une correspondance
+            if (
+              recipeIngredient.toLowerCase().includes(ingredient.toLowerCase())
+            ) {
+              matchFound = true;
+              break; // Arrêter la boucle intérieure si une correspondance est trouvée
+            }
+          }
+          // Si aucune correspondance n'est trouvée pour un ustensile, retourner false
+          if (!matchFound) {
+            return false;
+          }
+        }
+
+        // Si tous les ustensiles sélectionnés correspondent, retourner true
+        return true;
+      })();
 
     // Filtrer selon les ustensiles sélectionnés
     const ustensilsMatch =
       selectedOptions.ustensils.length === 0 ||
-      // changer every et some
-      selectedOptions.ustensils.every((ustensil) =>
-        recipe.ustensils.some((recipeUstensil) =>
-          recipeUstensil.toLowerCase().includes(ustensil.toLowerCase())
-        )
-      );
+      (() => {
+        // Itérer sur selectedOptions.ustensils
+        for (let i = 0; i < selectedOptions.ustensils.length; i++) {
+          let ustensil = selectedOptions.ustensils[i];
+          let matchFound = false;
+
+          // Itérer sur recipe.ustensils
+          for (let j = 0; j < recipe.ustensils.length; j++) {
+            let recipeUstensil = recipe.ustensils[j];
+
+            // Vérifier s'il y a une correspondance
+            if (recipeUstensil.toLowerCase().includes(ustensil.toLowerCase())) {
+              matchFound = true;
+              break; // Arrêter la boucle intérieure si une correspondance est trouvée
+            }
+          }
+
+          // Si aucune correspondance n'est trouvée pour un ustensile, retourner false
+          if (!matchFound) {
+            return false;
+          }
+        }
+
+        // Si tous les ustensiles sélectionnés correspondent, retourner true
+        return true;
+      })();
 
     // Filtrer selon l'appareil sélectionné
     const applianceMatch =
@@ -54,6 +94,11 @@ export function performSearch(searchValue, selectedOptions) {
     if (ingredientsMatch && ustensilsMatch && applianceMatch) {
       selectedRecipes.push(recipe);
     }
+  }
+
+  // Si aucune recette n'a été trouvée, afficher un message d'erreur
+  if (selectedRecipes.length === 0) {
+    displayErrorMessage("Aucune recette ne correspond à vos critères.");
   }
 
   return selectedRecipes; // Retourner toutes les recettes sélectionnées
