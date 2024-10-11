@@ -222,6 +222,12 @@ button .fa-magnifying-glass {
 
 /******************************************************** Les cards *************************************************/
 
+.cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-items: center;
+}
+
 .card {
   display: flex;
   flex-direction: column;
@@ -236,6 +242,7 @@ button .fa-magnifying-glass {
   position: absolute;
   font-size: 12px;
   text-align: center;
+
   font-family: Manrope;
   background-color: #ffd15b;
   width: 63px;

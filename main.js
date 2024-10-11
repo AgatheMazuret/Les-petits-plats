@@ -1,8 +1,14 @@
 import "./styles/style.css";
-import { createDropdown } from "./templates/dropdown.js";
+
 import { cardTemplate } from "./templates/card.js";
 import { recipes } from "./public/recipes.js";
 import { performSearch } from "./algorithmes/algorithme1.js";
+import { setupSearch } from "./templates/searchbar.js";
+import { templateOptions } from "./templates/template-options.js";
+import { setupDropdownSearch } from "./templates/input-search.js";
+import { getAllAppliances } from "./templates/get-all-types.js";
+import { getAllUstensils } from "./templates/get-all-types.js";
+import { getAllIngredients } from "./templates/get-all-types.js";
 
 // Initialiser un tableau pour stocker les options sélectionnées
 const selectedOptions = {
@@ -22,7 +28,6 @@ function updateRecipeCount(count) {
 // ********************************* Affichage des recettes dans le DOM  *******************************************
 // fonction pour intégrer le résultat de la recherche dans le DOM
 export function displayResults(results) {
-  console.log(selectedOptions);
   // Sélectionne la section des recettes
   const recipesSection = document.querySelector(".cards");
 
@@ -39,130 +44,29 @@ export function displayResults(results) {
 }
 
 // *********************************Listes sans doublons*******************************************
-// Fonction pour récupérer tous les appareils sans doublons
-export function getAllAppliances(recipes) {
-  const appliancesSet = new Set();
-  recipes.forEach((recipe) => {
-    appliancesSet.add(recipe.appliance);
-  });
-  return Array.from(appliancesSet);
-}
-
-// Fonction pour récupérer tous les ustensiles sans doublons
-export function getAllUstensils(recipes) {
-  const ustensilsSet = new Set();
-  recipes.forEach((recipe) => {
-    recipe.ustensils.forEach((ustensil) => {
-      ustensilsSet.add(ustensil);
-    });
-  });
-  return Array.from(ustensilsSet);
-}
-
-// Fonction pour récupérer tous les ingrédients sans doublons
-export function getAllIngredients(recipes) {
-  const ingredientsSet = new Set();
-  recipes.forEach((recipe) => {
-    recipe.ingredients.forEach((ingredientObj) => {
-      if (typeof ingredientObj === "object" && ingredientObj.ingredient) {
-        ingredientsSet.add(ingredientObj.ingredient);
-      } else {
-        ingredientsSet.add(ingredientObj);
-      }
-    });
-  });
-  return Array.from(ingredientsSet);
-}
-
-// Appel des fonctions pour obtenir les listes
-const allAppliances = getAllAppliances(recipes);
-const allUstensils = getAllUstensils(recipes);
-const allIngredients = getAllIngredients(recipes);
+getAllAppliances(recipes);
+getAllUstensils(recipes);
+getAllIngredients(recipes);
 
 // ***************************************Dropdowns**************************************************
 // stocker les options seléctionnées
 
 // Mettre à jour l'affichage des recettes
-function renderDropdownOptions(container, options) {
+export function renderDropdownOptions(container, options, type) {
   container.innerHTML = "";
   options.forEach((option) => {
     const optionElement = document.createElement("p");
     optionElement.classList.add("dropdown-option");
     optionElement.textContent = option;
     container.appendChild(optionElement);
+    // Ajouter un événement de clic pour sélectionner l'option
+    // Deplacer le code qui est en bas 368
   });
 }
 
-// Créer les dropdowns
-createDropdown("appliance", "Appareil", allAppliances);
-renderDropdownOptions(
-  document.querySelector("#appliance.dropdown .options-container"),
-  allAppliances
-);
-createDropdown("ustensils", "Ustensiles", allUstensils);
-renderDropdownOptions(
-  document.querySelector("#ustensils.dropdown .options-container"),
-  allUstensils
-);
-
-createDropdown("ingredients", "Ingrédients", allIngredients);
-renderDropdownOptions(
-  document.querySelector("#ingredients.dropdown .options-container"),
-  allIngredients
-);
-
-// Créer les cards
-displayResults(recipes);
-
-// Ajouter l'événement de clic pour afficher/masquer le dropdown
-const dropdowns = document.querySelectorAll(".dropdown-button");
-dropdowns.forEach((dropdown) => {
-  dropdown.addEventListener("click", () => {
-    dropdown.nextElementSibling.classList.toggle("show");
-  });
-});
-
 // ****************************************Barre de recherche****************************************************
 
-//On récupère la valeur de l'input
-// Sélectionne l'élément du champ de recherche dans le HTML
-const searchForm = document.querySelector("form.search");
-const searchInput = document.querySelector("form.search input");
-
-// Ajoute un écouteur d'événements au champ de recherche
-// Lorsque une touche est enfoncée dans le champ de recherche
-searchForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-
-  const formData = new FormData(event.target);
-  // Récupère la valeur du champ de recherche, enlève les espaces au début et à la fin, et met tout en minuscules
-  const value = formData.get("search").trim().toLowerCase();
-
-  if (value.length <= 3) {
-    searchValue = "";
-  } else {
-    searchValue = value;
-  }
-  // Si c'est le cas, appelle la fonction performSearch pour lancer la recherche
-  const results = performSearch(searchValue, selectedOptions);
-  displayResults(results);
-});
-
-// Ajoute un écouteur d'événements au champ de recherche
-// Lorsque une touche est enfoncée dans le champ de recherche
-searchInput.addEventListener("input", (event) => {
-  // Récupère la valeur du champ de recherche, enlève les espaces au début et à la fin, et met tout en minuscules
-  const value = event.target.value.trim().toLowerCase();
-
-  if (value.length <= 3) {
-    searchValue = "";
-  } else {
-    searchValue = value;
-  }
-  // Si c'est le cas, appelle la fonction performSearch pour lancer la recherche
-  const results = performSearch(searchValue, selectedOptions);
-  displayResults(results);
-});
+setupSearch();
 
 // ******************************************Filtres*************************************************************
 
@@ -171,7 +75,7 @@ searchInput.addEventListener("input", (event) => {
 // ********************* Création et suppression des options *********************
 
 // Fonction pour retirer une option sélectionnée du tableau des options sélectionnées
-function removeSelectedOption(type, selectedOption) {
+export function removeSelectedOption(type, selectedOption) {
   // Vérifie si le type d'option existe et est un tableau
   if (selectedOptions[type] && Array.isArray(selectedOptions[type])) {
     // Trouve l'index de l'option sélectionnée dans le tableau
@@ -189,42 +93,7 @@ function removeSelectedOption(type, selectedOption) {
 }
 
 // Fonction pour afficher les options sélectionnées dans un conteneur spécifique
-function templateOptions(
-  type,
-  selectedOption,
-  containerSelector = ".selected-option-display" // Sélecteur par défaut pour le conteneur d'affichage
-) {
-  // Sélectionne le conteneur où afficher les options sélectionnées
-  const selectedOptionDisplay = document.querySelector(containerSelector);
-
-  // Vérifie si le conteneur existe
-  if (!selectedOptionDisplay) {
-    console.error("Le conteneur spécifié est introuvable.");
-    return;
-  }
-
-  // Crée un élément paragraphe pour afficher l'option sélectionnée
-  const selectedOptionElement = document.createElement("p");
-  selectedOptionElement.textContent = selectedOption; // Ajoute le texte de l'option
-  selectedOptionElement.classList.add("selected-option-option"); // Ajoute une classe pour le style
-  selectedOptionElement.setAttribute("data-type", type); // Ajoute un attribut pour identifier le type d'option
-  selectedOptionDisplay.appendChild(selectedOptionElement); // Ajoute l'élément au conteneur
-
-  // Crée une icône de fermeture pour retirer l'option
-  const closeIcon = document.createElement("i");
-  closeIcon.classList.add("fa-solid", "fa-x"); // Ajoute des classes pour l'icône
-  selectedOptionElement.appendChild(closeIcon); // Ajoute l'icône à l'élément
-
-  // Ajoute un événement de clic pour retirer l'option lorsqu'on clique sur l'icône de fermeture
-  closeIcon.addEventListener("click", () => {
-    removeSelectedOption(type, selectedOption); // Retire l'option du tableau des options sélectionnées
-    selectedOptionElement.remove(); // Retire l'élément de l'affichage
-
-    // Réexécute la recherche et met à jour les résultats
-    const results = performSearch(searchValue, selectedOptions);
-    displayResults(results);
-  });
-}
+templateOptions();
 
 function renderSelectedOptionsTags() {
   const selectedOptionDisplay = document.querySelector(
@@ -385,25 +254,4 @@ dropdownOptionsUstensils.forEach((option) => {
 });
 
 // ************************** Recherche par input **************************
-
-// Sélectionner toutes les entrées de recherche dans les dropdowns
-const dropdownSearches = document.querySelectorAll(".dropdown-search");
-
-// Ajouter un événement de saisie à chaque élément de recherche
-dropdownSearches.forEach((dropdownSearch) => {
-  dropdownSearch.addEventListener("input", (event) => {
-    const searchValue = event.target.value.trim().toLowerCase();
-
-    const dropdownOptions =
-      dropdownSearch.parentElement.querySelectorAll(".dropdown-option");
-
-    dropdownOptions.forEach((option) => {
-      const optionText = option.textContent.toLowerCase();
-      if (optionText.includes(searchValue)) {
-        option.style.display = "block";
-      } else {
-        option.style.display = "none";
-      }
-    });
-  });
-});
+setupDropdownSearch();

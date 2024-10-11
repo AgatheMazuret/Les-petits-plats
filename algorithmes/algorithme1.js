@@ -1,9 +1,9 @@
 import { recipes } from "../public/recipes.js";
-// *******************************************************Algorithme array********************************************************
 
-// Fonction qui effectue la recherche de recettes en fonction de la valeur de recherche fournie
+// *******************************************************Algorithme array.filter******************************************************
+
 export function performSearch(searchValue, selectedOptions) {
-  // Filtrer les recettes en fonction de la valeur de recherche (search bar)
+  // Filtrer les recettes en fonction de la valeur de recherche (barre de recherche)
   const searchValueLower = searchValue.toLowerCase();
   const filteredRecipes = recipes.filter((recipe) =>
     recipe.name.toLowerCase().includes(searchValueLower)
@@ -11,40 +11,42 @@ export function performSearch(searchValue, selectedOptions) {
 
   // Filtrer les recettes en fonction des options sélectionnées (toutes les options doivent être respectées)
   const selectedRecipes = filteredRecipes.filter((recipe) => {
+    // Vérifier que la recette a bien des ingrédients avant de filtrer
+    const ingredientsList = recipe.ingredients || [];
+
+    // S'assurer que selectedOptions est correctement initialisé
+    const selectedIngredients = selectedOptions.ingredients || [];
+    const selectedUstensils = selectedOptions.ustensils || [];
+    const selectedAppliance = selectedOptions.appliance || "";
+
     // Filtrer selon les ingrédients sélectionnés : Tous les ingrédients sélectionnés doivent être présents dans la recette
     const ingredientsMatch =
-      // Si aucun ingrédient n'est sélectionné, ne pas appliquer de filtre sur les ingrédients
-      selectedOptions.ingredients.length === 0 ||
-      // Vérifier que chaque ingrédient sélectionné est présent dans la liste des ingrédients de la recette (comparaison insensible à la casse)
-      selectedOptions.ingredients.every((ingredient) =>
-        recipe.ingredients.some((recipeIngredient) =>
+      selectedIngredients.length === 0 ||
+      selectedIngredients.every((ingredient) =>
+        ingredientsList.some((recipeIngredient) =>
           recipeIngredient.ingredient
             .toLowerCase()
             .includes(ingredient.toLowerCase())
         )
       );
 
-    // Filtrer selon les ustensiles sélectionnés : Tous les ustensiles sélectionnés doivent être présents dans la recette
+    // Filtrer selon les ustensiles sélectionnés
     const ustensilsMatch =
-      // Si aucun ustensile n'est sélectionné, ne pas appliquer de filtre sur les ustensiles
-      selectedOptions.ustensils.length === 0 ||
-      // Vérifier que chaque ustensile sélectionné est présent dans la liste des ustensiles de la recette (comparaison insensible à la casse)
-      selectedOptions.ustensils.every((ustensil) =>
-        recipe.ustensils.some((recipeUstensil) =>
+      selectedUstensils.length === 0 ||
+      selectedUstensils.every((ustensil) =>
+        (recipe.ustensils || []).some((recipeUstensil) =>
           recipeUstensil.toLowerCase().includes(ustensil.toLowerCase())
         )
       );
 
-    // Filtrer selon l'appareil sélectionné : Doit correspondre exactement
+    // Filtrer selon l'appareil sélectionné
     const applianceMatch =
-      // Si aucun appareil n'est sélectionné, ne pas appliquer de filtre sur l'appareil
-      !selectedOptions.appliance ||
-      // Si un appareil est sélectionné, vérifier que l'appareil de la recette correspond à l'appareil sélectionné (comparaison insensible à la casse)
-      recipe.appliance
+      !selectedAppliance ||
+      (recipe.appliance || "")
         .toLowerCase()
-        .includes(selectedOptions.appliance.toLowerCase());
+        .includes(selectedAppliance.toLowerCase());
 
-    // Toutes les conditions doivent être remplies pour que la recette soit sélectionnée
+    // Retourner true si toutes les conditions sont respectées
     return ingredientsMatch && ustensilsMatch && applianceMatch;
   });
 
