@@ -3,10 +3,14 @@ import { recipes } from "../public/recipes.js";
 // *******************************************************Algorithme array.filter******************************************************
 
 export function performSearch(searchValue, selectedOptions) {
-  // Filtrer les recettes en fonction de la valeur de recherche (barre de recherche)
+  // Mettre la valeur de recherche en minuscule pour les comparaisons
   const searchValueLower = searchValue.toLowerCase();
-  const filteredRecipes = recipes.filter((recipe) =>
-    recipe.name.toLowerCase().includes(searchValueLower)
+
+  // Filtrer les recettes en fonction de la valeur de recherche (nom ou description)
+  const filteredRecipes = recipes.filter(
+    (recipe) =>
+      recipe.name.toLowerCase().includes(searchValueLower) ||
+      recipe.description.toLowerCase().includes(searchValueLower)
   );
 
   // Filtrer les recettes en fonction des options sélectionnées (toutes les options doivent être respectées)
@@ -47,7 +51,9 @@ export function performSearch(searchValue, selectedOptions) {
         .includes(selectedAppliance.toLowerCase());
 
     // Retourner true si toutes les conditions sont respectées
-    return ingredientsMatch && ustensilsMatch && applianceMatch;
+    return (
+      ingredientsMatch && ustensilsMatch && applianceMatch && descriptionMatch
+    );
   });
 
   return selectedRecipes;

@@ -4,102 +4,89 @@ import { recipes } from "../public/recipes.js";
 
 // Fonction qui effectue la recherche de recettes en fonction de la valeur de recherche fournie
 export function performSearch(searchValue, selectedOptions) {
-  // Filtrer les recettes en fonction de la valeur de recherche (search bar)
+  // Mettre la valeur de recherche en minuscule pour les comparaisons
   const searchValueLower = searchValue.toLowerCase();
   const filteredRecipes = [];
 
-  // Filtrer les recettes par la valeur de recherche
+  // Filtrer les recettes en fonction de la valeur de recherche (nom ou description)
   for (let i = 0; i < recipes.length; i++) {
     const recipe = recipes[i];
-    if (recipe.name.toLowerCase().includes(searchValueLower)) {
+    if (
+      recipe.name.toLowerCase().includes(searchValueLower) ||
+      recipe.description.toLowerCase().includes(searchValueLower)
+    ) {
       filteredRecipes.push(recipe);
     }
   }
 
-  // Filtrer les recettes en fonction des options sélectionnées (toutes les options doivent être respectées)
   const selectedRecipes = [];
 
+  // Filtrer les recettes en fonction des options sélectionnées (ingrédients, ustensiles, appareil)
   for (let i = 0; i < filteredRecipes.length; i++) {
     const recipe = filteredRecipes[i];
 
-    // Filtrer selon les ingrédients sélectionnés
-    const ingredientsMatch =
-      selectedOptions.ingredients.length === 0 ||
-      (() => {
-        // Itérer sur selectedOptions.ingredients
-        for (let i = 0; i < selectedOptions.ingredients.length; i++) {
-          let ingredient = selectedOptions.ingredients[i];
-          let matchFound = false;
+    // Vérifier si tous les ingrédients sélectionnés sont présents dans la recette
+    let ingredientsMatch = true;
+    if (selectedOptions.ingredients.length > 0) {
+      for (let j = 0; j < selectedOptions.ingredients.length; j++) {
+        const ingredient = selectedOptions.ingredients[j].toLowerCase();
+        let ingredientFound = false;
 
-          // Itérer sur recipe.ingrédients
-          for (let j = 0; j < recipe.ingredients.length; j++) {
-            let recipeIngredient = recipe.ingredients[j];
-
-            //Vérifier si il y a une correspondance
-            if (
-              recipeIngredient.toLowerCase().includes(ingredient.toLowerCase())
-            ) {
-              matchFound = true;
-              break; // Arrêter la boucle intérieure si une correspondance est trouvée
-            }
-          }
-          // Si aucune correspondance n'est trouvée pour un ustensile, retourner false
-          if (!matchFound) {
-            return false;
+        for (let k = 0; k < recipe.ingredients.length; k++) {
+          const recipeIngredient = recipe.ingredients[k].toLowerCase();
+          if (recipeIngredient.includes(ingredient)) {
+            ingredientFound = true;
+            break; // Si l'ingrédient est trouvé, arrêter la recherche pour cet ingrédient
           }
         }
 
-        // Si tous les ustensiles sélectionnés correspondent, retourner true
-        return true;
-      })();
+        if (!ingredientFound) {
+          ingredientsMatch = false;
+          break; // Si un ingrédient n'est pas trouvé, arrêter la boucle
+        }
+      }
+    }
 
-    // Filtrer selon les ustensiles sélectionnés
-    const ustensilsMatch =
-      selectedOptions.ustensils.length === 0 ||
-      (() => {
-        // Itérer sur selectedOptions.ustensils
-        for (let i = 0; i < selectedOptions.ustensils.length; i++) {
-          let ustensil = selectedOptions.ustensils[i];
-          let matchFound = false;
+    // Vérifier si tous les ustensiles sélectionnés sont présents dans la recette
+    let ustensilsMatch = true;
+    if (selectedOptions.ustensils.length > 0) {
+      for (let j = 0; j < selectedOptions.ustensils.length; j++) {
+        const ustensil = selectedOptions.ustensils[j].toLowerCase();
+        let ustensilFound = false;
 
-          // Itérer sur recipe.ustensils
-          for (let j = 0; j < recipe.ustensils.length; j++) {
-            let recipeUstensil = recipe.ustensils[j];
-
-            // Vérifier s'il y a une correspondance
-            if (recipeUstensil.toLowerCase().includes(ustensil.toLowerCase())) {
-              matchFound = true;
-              break; // Arrêter la boucle intérieure si une correspondance est trouvée
-            }
-          }
-
-          // Si aucune correspondance n'est trouvée pour un ustensile, retourner false
-          if (!matchFound) {
-            return false;
+        for (let k = 0; k < recipe.ustensils.length; k++) {
+          const recipeUstensil = recipe.ustensils[k].toLowerCase();
+          if (recipeUstensil.includes(ustensil)) {
+            ustensilFound = true;
+            break; // Si l'ustensile est trouvé, arrêter la recherche pour cet ustensile
           }
         }
 
-        // Si tous les ustensiles sélectionnés correspondent, retourner true
-        return true;
-      })();
+        if (!ustensilFound) {
+          ustensilsMatch = false;
+          break; // Si un ustensile n'est pas trouvé, arrêter la boucle
+        }
+      }
+    }
 
-    // Filtrer selon l'appareil sélectionné
-    const applianceMatch =
-      !selectedOptions.appliance ||
-      recipe.appliance
+    // Vérifier si l'appareil sélectionné correspond à celui de la recette
+    let applianceMatch = true;
+    if (selectedOptions.appliance) {
+      applianceMatch = recipe.appliance
         .toLowerCase()
         .includes(selectedOptions.appliance.toLowerCase());
+    }
 
-    // Toutes les conditions doivent être remplies pour que la recette soit sélectionnée
+    // Si tous les critères sont respectés, ajouter la recette à la liste des résultats
     if (ingredientsMatch && ustensilsMatch && applianceMatch) {
       selectedRecipes.push(recipe);
     }
   }
 
-  // Si aucune recette n'a été trouvée, afficher un message d'erreur
+  // Afficher un message d'erreur si aucune recette ne correspond aux critères
   if (selectedRecipes.length === 0) {
     displayErrorMessage("Aucune recette ne correspond à vos critères.");
   }
 
-  return selectedRecipes; // Retourner toutes les recettes sélectionnées
+  return selectedRecipes; // Retourner les recettes sélectionnées
 }
