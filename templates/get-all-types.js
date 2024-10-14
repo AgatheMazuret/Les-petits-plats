@@ -1,7 +1,8 @@
-import { recipes } from "../public/recipes.js";
-import { createDropdown } from "./dropdown.js";
-import { renderDropdownOptions } from "../main.js";
-import { displayResults } from "../main.js";
+// Importation des ressources
+import { recipes } from "../public/recipes.js"; // Liste des recettes
+import { createDropdown } from "./dropdown.js"; // Création des dropdowns
+import { displayResults } from "../main.js"; // Affichage des recettes
+import { handleDropdown } from "../main.js"; // Gestion des dropdowns
 
 // Fonction pour récupérer tous les appareils sans doublons
 export function getAllAppliances(recipes) {
@@ -37,36 +38,35 @@ export function getAllIngredients(recipes) {
   });
   return Array.from(ingredientsSet);
 }
+
 // Appel des fonctions pour obtenir les listes
 const allAppliances = getAllAppliances(recipes);
 const allUstensils = getAllUstensils(recipes);
 const allIngredients = getAllIngredients(recipes);
 
-// Créer les dropdowns
-createDropdown("appliance", "Appareil", allAppliances);
-renderDropdownOptions(
-  document.querySelector("#appliance.dropdown .options-container"),
-  allAppliances
-);
-createDropdown("ustensils", "Ustensiles", allUstensils);
-renderDropdownOptions(
-  document.querySelector("#ustensils.dropdown .options-container"),
-  allUstensils
-);
+// Créer les dropdowns et gérer les interactions
+function initializeDropdowns() {
+  createDropdown("appliance", "Appareil", allAppliances);
+  handleDropdown("appliance");
 
-createDropdown("ingredients", "Ingrédients", allIngredients);
-renderDropdownOptions(
-  document.querySelector("#ingredients.dropdown .options-container"),
-  allIngredients
-);
+  createDropdown("ustensils", "Ustensiles", allUstensils);
+  handleDropdown("ustensils");
 
-// Créer les cards
+  createDropdown("ingredients", "Ingrédients", allIngredients);
+  handleDropdown("ingredients");
+}
+
+// Créer les cards de recettes
 displayResults(recipes);
+
+// Initialiser les dropdowns
+initializeDropdowns();
 
 // Ajouter l'événement de clic pour afficher/masquer le dropdown
 const dropdowns = document.querySelectorAll(".dropdown-button");
 dropdowns.forEach((dropdown) => {
   dropdown.addEventListener("click", () => {
-    dropdown.nextElementSibling.classList.toggle("show");
+    const optionsContainer = dropdown.nextElementSibling; // Assure-toi que l'élément suivant est le conteneur
+    optionsContainer.classList.toggle("show");
   });
 });

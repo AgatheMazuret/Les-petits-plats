@@ -51,9 +51,7 @@ export function performSearch(searchValue, selectedOptions) {
         .includes(selectedAppliance.toLowerCase());
 
     // Retourner true si toutes les conditions sont respectées
-    return (
-      ingredientsMatch && ustensilsMatch && applianceMatch && descriptionMatch
-    );
+    return ingredientsMatch && ustensilsMatch && applianceMatch;
   });
 
   return selectedRecipes;

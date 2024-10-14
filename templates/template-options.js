@@ -1,5 +1,6 @@
 import { removeSelectedOption } from "../main.js";
 import { performSearch } from "../algorithmes/algorithme1.js";
+import { displayResults } from "../main.js";
 export function templateOptions(
   type,
   selectedOption,
