@@ -69,6 +69,22 @@ function renderSelectedOptionsTags() {
 }
 
 // ********************************* Affichage et gestion des interactions du dropdown ********************************************
+function renderSelectedOptions(type) {
+  const selectedOptionsContainer = document.querySelectorAll(
+    `div.dropdown.${type} .selected-options-display`
+  );
+
+  selectedOptionsContainer.forEach((container) => {
+    container.innerHTML = ""; // Réinitialise le conteneur
+    const options = selectedOptions[type];
+    const optionsArray = Array.isArray(options) ? options : [options];
+
+    optionsArray.forEach((option) => {
+      moveOptionToSelected(container, option, type);
+    });
+  });
+}
+
 function moveOptionToSelected(container, selectedText, type) {
   const selectedOptionElement = document.createElement("p");
   selectedOptionElement.textContent = selectedText;
@@ -89,11 +105,11 @@ function moveOptionToSelected(container, selectedText, type) {
 
 // Gestion des interactions des dropdowns pour les différents types
 export function handleDropdown(type) {
-  const selectedOptionsContainer = document.querySelector(
-    `div.dropdown.${type} .selected-options-container`
+  const selectedOptionsContainer = document.querySelectorAll(
+    `div.dropdown.${type} .selected-options-display`
   );
   const dropdownOptions = document.querySelectorAll(
-    `div.dropdown.${type} .dropdown-option`
+    `div.dropdown.${type} .options-container p`
   );
 
   dropdownOptions.forEach((option) => {
@@ -123,17 +139,7 @@ export function handleDropdown(type) {
     });
   });
 
-  function renderSelectedOptions() {
-    selectedOptionsContainer.innerHTML = ""; // Réinitialise le conteneur
-    const options = selectedOptions[type];
-    const optionsArray = Array.isArray(options) ? options : [options];
-
-    optionsArray.forEach((option) => {
-      moveOptionToSelected(selectedOptionsContainer, option, type);
-    });
-  }
-
-  renderSelectedOptions(); // Affichage initial des options sélectionnées
+  renderSelectedOptions(type); // Affichage initial des options sélectionnées
 }
 
 // Mise à jour des résultats et affichage des options sélectionnées
@@ -149,6 +155,9 @@ handleDropdown("appliance");
 handleDropdown("ustensils");
 
 // ********************************* Configuration de la barre de recherche et des dropdowns ********************************************
+getAllAppliances(recipes); // Récupère tous les appareils
+getAllUstensils(recipes); // Récupère tous les ustensiles
+getAllIngredients(recipes); // Récupère tous les ingrédients
 setupSearch(); // Barre de recherche principale
 setupDropdownSearch(); // Recherche dans les dropdowns
 displayResults(recipes); // Affichage initial des recettes
