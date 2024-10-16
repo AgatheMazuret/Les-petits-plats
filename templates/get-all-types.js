@@ -39,13 +39,12 @@ export function getAllIngredients(recipes) {
   return Array.from(ingredientsSet);
 }
 
-// Appel des fonctions pour obtenir les listes
-const allAppliances = getAllAppliances(recipes);
-const allUstensils = getAllUstensils(recipes);
-const allIngredients = getAllIngredients(recipes);
-
 // Créer les dropdowns et gérer les interactions
 export function initializeDropdowns() {
+  // Appel des fonctions pour obtenir les listes
+  const allAppliances = getAllAppliances(recipes);
+  const allUstensils = getAllUstensils(recipes);
+  const allIngredients = getAllIngredients(recipes);
   createDropdown("appliance", "Appareil", allAppliances);
   handleDropdown("appliance");
 
@@ -55,12 +54,10 @@ export function initializeDropdowns() {
   createDropdown("ingredients", "Ingrédients", allIngredients);
   handleDropdown("ingredients");
 }
-
-// Créer les cards de recettes
-displayResults(recipes);
-
 // Initialiser les dropdowns
 initializeDropdowns();
+// Créer les cards de recettes
+displayResults(recipes);
 
 // Ajouter l'événement de clic pour afficher/masquer le dropdown
 const dropdowns = document.querySelectorAll(".dropdown-button");

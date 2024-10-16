@@ -4,14 +4,15 @@ import { cardTemplate } from "./templates/card.js"; // Modèle pour l'affichage 
 import { recipes } from "./public/recipes.js"; // Liste des recettes
 import { performSearch } from "./algorithmes/algorithme1.js"; // Algorithme de recherche
 import { setupSearch } from "./templates/searchbar.js"; // Configuration de la barre de recherche
-import { templateOptions } from "./templates/template-options.js"; // Template pour l'affichage des options sélectionnées
 import { setupDropdownSearch } from "./templates/input-search.js"; // Configuration des recherches par dropdown/input
 import {
   getAllAppliances,
   getAllIngredients,
   getAllUstensils,
 } from "./templates/get-all-types.js"; // Récupération des types d'éléments
-
+import { templateOptions } from "./templates/template-options.js"; // Modèle pour les options sélectionnées
+import { moveOptionBelowSearch } from "./templates/template-options.js"; // Déplacement des options sous la barre de recherche
+import { insertSelectedItemAfterSearch } from "./templates/template-options.js"; // Insertion de l'élément sélectionné après la recherche
 // ********************************* Initialisation des variables ********************************************
 const selectedOptions = {
   ingredients: [],
@@ -27,6 +28,7 @@ function updateRecipeCount(count) {
 }
 
 // ********************************* Affichage des recettes dans le DOM *******************************************
+
 export function displayResults(results) {
   const recipesSection = document.querySelector(".cards");
   recipesSection.innerHTML = ""; // Réinitialise les recettes actuelles
@@ -37,12 +39,11 @@ export function displayResults(results) {
   updateRecipeCount(results.length);
 }
 
-// Appel des fonctions pour obtenir les listes
-const allAppliances = getAllAppliances(recipes);
-const allUstensils = getAllUstensils(recipes);
-const allIngredients = getAllIngredients(recipes);
-
 // ********************************* Gestion des filtres et options sélectionnées ********************************************
+templateOptions("search", searchValue);
+moveOptionBelowSearch();
+insertSelectedItemAfterSearch();
+
 export function removeSelectedOption(type, selectedOption) {
   if (selectedOptions[type] && Array.isArray(selectedOptions[type])) {
     const index = selectedOptions[type].indexOf(selectedOption);
