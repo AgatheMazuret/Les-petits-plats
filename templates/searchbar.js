@@ -1,13 +1,12 @@
-export function setupSearch(
-  formSelector, // Le sélecteur pour le formulaire
-  inputSelector, // Le sélecteur pour le champ de recherche
-  performSearch, // Fonction pour exécuter la recherche
-  selectedOptions // Options pour la recherche
-) {
+/**
+ *
+ * @param {(value:string)=> void} onSearch
+ */
+export function setupSearch(onSearch) {
   // Sélectionner les éléments du formulaire et du champ de recherche
   document.addEventListener("DOMContentLoaded", () => {
-    const searchForm = document.querySelector(formSelector); // Utilise le sélecteur passé en paramètre
-    const searchInput = document.querySelector(inputSelector); // Utilise aussi le sélecteur passé en paramètre
+    const searchForm = document.querySelector("form.search"); // Utilise le sélecteur passé en paramètre
+    const searchInput = document.querySelector(".search input"); // Utilise aussi le sélecteur passé en paramètre
 
     // Vérifier que les éléments existent
     if (!searchForm || !searchInput) {
@@ -23,29 +22,14 @@ export function setupSearch(
       // Récupérer la valeur du champ de recherche
       const value = formData.get("search").trim().toLowerCase();
 
-      // Valider la longueur de la valeur
-      let searchValue = "";
-      if (value.length > 3) {
-        searchValue = value;
-      }
-
-      // Appeler la fonction de recherche et afficher les résultats
-      const results = performSearch(searchValue, selectedOptions);
-      displayResults(results); // Assure-toi que cette fonction est définie ailleurs
+      onSearch(value);
     });
 
     // Ajouter un écouteur d'événement pour les changements de saisie dans le champ de recherche
     searchInput.addEventListener("input", (event) => {
       const value = event.target.value.trim().toLowerCase();
 
-      let searchValue = "";
-      if (value.length > 3) {
-        searchValue = value;
-      }
-
-      // Appeler la fonction de recherche et afficher les résultats en temps réel
-      const results = performSearch(searchValue, selectedOptions);
-      displayResults(results); // Assure-toi que cette fonction est définie
+      onSearch(value);
     });
   });
 }

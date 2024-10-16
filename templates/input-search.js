@@ -1,6 +1,8 @@
-export function setupDropdownSearch(dropdownSearchSelector, optionSelector) {
+export function setupDropdownSearch() {
   // Sélectionner toutes les entrées de recherche dans les dropdowns
-  const dropdownSearches = document.querySelectorAll(dropdownSearchSelector);
+  const dropdownSearches = document.querySelectorAll(
+    ".dropdown-content.dropdown-search"
+  );
 
   // Ajouter un événement de saisie à chaque élément de recherche
   dropdownSearches.forEach((dropdownSearch) => {
@@ -8,8 +10,9 @@ export function setupDropdownSearch(dropdownSearchSelector, optionSelector) {
       const searchValue = event.target.value.trim().toLowerCase();
 
       // Sélectionner toutes les options associées à ce dropdown
-      const dropdownOptions =
-        dropdownSearch.parentElement.querySelectorAll(optionSelector);
+      const dropdownOptions = dropdownSearch.parentElement.querySelectorAll(
+        ".selected-options-container"
+      );
 
       // Filtrer et afficher/masquer les options selon la recherche
       dropdownOptions.forEach((option) => {

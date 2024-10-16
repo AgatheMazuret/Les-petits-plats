@@ -8,8 +8,8 @@ import { templateOptions } from "./templates/template-options.js"; // Template p
 import { setupDropdownSearch } from "./templates/input-search.js"; // Configuration des recherches par dropdown/input
 import {
   getAllAppliances,
-  getAllUstensils,
   getAllIngredients,
+  getAllUstensils,
 } from "./templates/get-all-types.js"; // Récupération des types d'éléments
 
 // ********************************* Initialisation des variables ********************************************
@@ -36,6 +36,11 @@ export function displayResults(results) {
   });
   updateRecipeCount(results.length);
 }
+
+// Appel des fonctions pour obtenir les listes
+const allAppliances = getAllAppliances(recipes);
+const allUstensils = getAllUstensils(recipes);
+const allIngredients = getAllIngredients(recipes);
 
 // ********************************* Gestion des filtres et options sélectionnées ********************************************
 export function removeSelectedOption(type, selectedOption) {
@@ -155,9 +160,20 @@ handleDropdown("appliance");
 handleDropdown("ustensils");
 
 // ********************************* Configuration de la barre de recherche et des dropdowns ********************************************
-getAllAppliances(recipes); // Récupère tous les appareils
-getAllUstensils(recipes); // Récupère tous les ustensiles
-getAllIngredients(recipes); // Récupère tous les ingrédients
-setupSearch(); // Barre de recherche principale
-setupDropdownSearch(); // Recherche dans les dropdowns
+
+setupSearch((value) => {
+  if (value.length > 3) {
+    searchValue = value;
+  } else {
+    searchValue = "";
+  }
+  // Appeler la fonction de recherche et afficher les résultats
+  const results = performSearch(searchValue, selectedOptions);
+  displayResults(results); // Assure-toi que cette fonction est définie ailleurs
+}); // Barre de recherche principale
+
+setupDropdownSearch(
+  ".dropdown-content.dropdown-search",
+  ".selected-options-container"
+); // Recherche dans les dropdowns
 displayResults(recipes); // Affichage initial des recettes

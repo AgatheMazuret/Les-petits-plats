@@ -83,10 +83,5 @@ export function performSearch(searchValue, selectedOptions) {
     }
   }
 
-  // Afficher un message d'erreur si aucune recette ne correspond aux critères
-  if (selectedRecipes.length === 0) {
-    displayErrorMessage("Aucune recette ne correspond à vos critères.");
-  }
-
   return selectedRecipes; // Retourner les recettes sélectionnées
 }

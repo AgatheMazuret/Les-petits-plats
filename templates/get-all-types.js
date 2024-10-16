@@ -45,7 +45,7 @@ const allUstensils = getAllUstensils(recipes);
 const allIngredients = getAllIngredients(recipes);
 
 // Créer les dropdowns et gérer les interactions
-function initializeDropdowns() {
+export function initializeDropdowns() {
   createDropdown("appliance", "Appareil", allAppliances);
   handleDropdown("appliance");
 
