@@ -1,8 +1,10 @@
 import { removeSelectedOption } from "../main.js";
+import { performSearch } from "../algorithmes/algorithme1.js";
+import { displayResults } from "../main.js";
 
 const input = document.querySelector(".search input");
 
-// CHAPITRE 1: Gestion de l'affichage des options sélectionnées
+// ****************************** Gestion de l'affichage des options sélectionnées********************************
 export function templateOptions(
   type,
   selectedOption,
@@ -41,7 +43,7 @@ export function templateOptions(
   });
 }
 
-// CHAPITRE 2: Gestion de la position des options dans le dropdown
+// **************************************** Gestion de la position des options dans le dropdown******************************************
 export function moveOptionBelowSearch(option, dropdown) {
   const dropdownSearch = document.querySelector(".dropdown-search");
 
@@ -52,7 +54,7 @@ export function moveOptionBelowSearch(option, dropdown) {
   }
 }
 
-// CHAPITRE 3: Insertion des éléments sélectionnés dans l'interface utilisateur
+//****************************************Insertion des éléments sélectionnés dans l'interface utilisateur***************************************
 export function insertSelectedItemAfterSearch(
   selectedText,
   option,
@@ -74,7 +76,7 @@ export function insertSelectedItemAfterSearch(
     selectedItem.remove(); // Supprime l'élément de la liste des éléments sélectionnés
 
     // Réaffiche et replace l'option dans le dropdown à sa position d'origine
-    const dropdownOptions = dropdown.querySelectorAll(".dropdown-option");
+    const dropdownOptions = document.querySelector(".dropdown-option");
 
     // Réinsère l'option à son index d'origine
     if (dropdownOptions[originalIndex]) {
@@ -101,7 +103,7 @@ export function insertSelectedItemAfterSearch(
   });
 
   // Insère l'élément sélectionné après le champ de recherche
-  const dropdownSearch = document.querySelector(".dropdown-search");
+  const dropdownSearch = document.querySelector("input.dropdown-search");
   if (dropdownSearch) {
     dropdownSearch.insertAdjacentElement("afterend", selectedItem);
   } else {
@@ -109,7 +111,7 @@ export function insertSelectedItemAfterSearch(
   }
 }
 
-// CHAPITRE 4: Gestion des événements de clic sur les options du dropdown
+// **************************************** Gestion des événements de clic sur les options du dropdown**************************************************
 export function handleDropdownOptions(dropdownOptions, selectedOptions) {
   dropdownOptions.forEach((option, index) => {
     option.addEventListener("click", () => {
