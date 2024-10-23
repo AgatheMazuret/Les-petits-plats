@@ -1,8 +1,7 @@
 // Importation des ressources
 import { recipes } from "../public/recipes.js"; // Liste des recettes
 import { createDropdown } from "./dropdown.js"; // Création des dropdowns
-import { displayResults } from "../main.js"; // Affichage des recettes
-import { handleDropdown } from "../main.js"; // Gestion des dropdowns
+import { setupDropdownSearch } from "./input-search.js";
 
 // Fonction pour récupérer tous les appareils sans doublons
 export function getAllAppliances(recipes) {
@@ -45,25 +44,24 @@ export function initializeDropdowns() {
   const allAppliances = getAllAppliances(recipes);
   const allUstensils = getAllUstensils(recipes);
   const allIngredients = getAllIngredients(recipes);
+
   createDropdown("appliance", "Appareil", allAppliances);
-  handleDropdown("appliance");
 
   createDropdown("ustensils", "Ustensiles", allUstensils);
-  handleDropdown("ustensils");
 
   createDropdown("ingredients", "Ingrédients", allIngredients);
-  handleDropdown("ingredients");
-}
-// Initialiser les dropdowns
-initializeDropdowns();
-// Créer les cards de recettes
-displayResults(recipes);
 
-// Ajouter l'événement de clic pour afficher/masquer le dropdown
-const dropdowns = document.querySelectorAll(".dropdown-button");
-dropdowns.forEach((dropdown) => {
-  dropdown.addEventListener("click", () => {
-    const optionsContainer = dropdown.nextElementSibling; // Assure-toi que l'élément suivant est le conteneur
-    optionsContainer.classList.toggle("show");
-  });
-});
+  setupDropdownSearch(
+    ".dropdown-content.dropdown-search",
+    ".selected-options-container"
+  ); // Recherche dans les dropdowns
+
+  // // Ajouter l'événement de clic pour afficher/masquer le dropdown
+  // const dropdowns = document.querySelectorAll(".dropdown-button");
+  // dropdowns.forEach((dropdown) => {
+  //   dropdown.addEventListener("click", () => {
+  //     const optionsContainer = dropdown.nextElementSibling; // Assure-toi que l'élément suivant est le conteneur
+  //     optionsContainer.classList.toggle("show");
+  //   });
+  // });
+}

@@ -4,15 +4,12 @@ import { cardTemplate } from "./templates/card.js"; // Modèle pour l'affichage 
 import { recipes } from "./public/recipes.js"; // Liste des recettes
 import { performSearch } from "./algorithmes/algorithme1.js"; // Algorithme de recherche
 import { setupSearch } from "./templates/searchbar.js"; // Configuration de la barre de recherche
-import { setupDropdownSearch } from "./templates/input-search.js"; // Configuration des recherches par dropdown/input
-import {
-  getAllAppliances,
-  getAllIngredients,
-  getAllUstensils,
-} from "./templates/get-all-types.js"; // Récupération des types d'éléments
+// import { setupDropdownSearch } from "./templates/input-search.js"; // Configuration des recherches par dropdown/input
+import { initializeDropdowns } from "./templates/initialize-dropdowns.js"; // Récupération des types d'éléments
 import { templateOptions } from "./templates/template-options.js"; // Modèle pour les options sélectionnées
-import { moveOptionBelowSearch } from "./templates/template-options.js"; // Déplacement des options sous la barre de recherche
-import { insertSelectedItemAfterSearch } from "./templates/template-options.js"; // Insertion de l'élément sélectionné après la recherche
+// import { moveOptionBelowSearch } from "./templates/template-options.js"; // Déplacement des options sous la barre de recherche
+// import { insertSelectedItemAfterSearch } from "./templates/template-options.js"; // Insertion de l'élément sélectionné après la recherche
+// import { handleDropdownOptions } from "./templates/template-options.js"; // Gestion des dropdowns
 // ********************************* Initialisation des variables ********************************************
 const selectedOptions = {
   ingredients: [],
@@ -40,9 +37,14 @@ export function displayResults(results) {
 }
 
 // ********************************* Gestion des filtres et options sélectionnées ********************************************
-templateOptions("search", searchValue);
-moveOptionBelowSearch();
-insertSelectedItemAfterSearch();
+// Initialiser les dropdowns
+initializeDropdowns();
+// Créer les cards de recettes
+displayResults(recipes);
+
+// templateOptions("search", searchValue);
+// moveOptionBelowSearch();
+// insertSelectedItemAfterSearch();
 
 export function removeSelectedOption(type, selectedOption) {
   if (selectedOptions[type] && Array.isArray(selectedOptions[type])) {
@@ -64,12 +66,22 @@ function renderSelectedOptionsTags() {
 
   for (const type in selectedOptions) {
     const options = selectedOptions[type];
+
+    function onClose(selectedOption) {
+      removeSelectedOption(type, selectedOption); // Retire l'option du tableau des options sélectionnées
+
+      // Réexécute la recherche et met à jour les résultats
+      const searchValue = input.value.trim().toLowerCase();
+      const results = performSearch(searchValue, selectedOption);
+      displayResults(results);
+    }
+
     if (Array.isArray(options)) {
       options.forEach((option) => {
-        templateOptions(type, option); // Affiche chaque option sélectionnée
+        templateOptions(type, option, onClose); // Affiche chaque option sélectionnée
       });
     } else if (options) {
-      templateOptions(type, options); // Affiche l'option unique
+      templateOptions(type, options, onClose); // Affiche l'option unique
     }
   }
 }
@@ -89,6 +101,13 @@ function renderSelectedOptions(type) {
       moveOptionToSelected(container, option, type);
     });
   });
+}
+
+// Mise à jour des résultats et affichage des options sélectionnées
+function updateResultsAndDisplay() {
+  const results = performSearch(searchValue, selectedOptions); // Effectue la recherche
+  displayResults(results);
+  renderSelectedOptionsTags(); // Met à jour les tags des options sélectionnées
 }
 
 function moveOptionToSelected(container, selectedText, type) {
@@ -148,17 +167,9 @@ export function handleDropdown(type) {
   renderSelectedOptions(type); // Affichage initial des options sélectionnées
 }
 
-// Mise à jour des résultats et affichage des options sélectionnées
-function updateResultsAndDisplay() {
-  const results = performSearch(searchValue, selectedOptions); // Effectue la recherche
-  displayResults(results);
-  renderSelectedOptionsTags(); // Met à jour les tags des options sélectionnées
-}
-
-// Initialisation des dropdowns pour chaque type
-handleDropdown("ingredients");
 handleDropdown("appliance");
 handleDropdown("ustensils");
+handleDropdown("ingredients");
 
 // ********************************* Configuration de la barre de recherche et des dropdowns ********************************************
 
@@ -172,9 +183,3 @@ setupSearch((value) => {
   const results = performSearch(searchValue, selectedOptions);
   displayResults(results); // Assure-toi que cette fonction est définie ailleurs
 }); // Barre de recherche principale
-
-setupDropdownSearch(
-  ".dropdown-content.dropdown-search",
-  ".selected-options-container"
-); // Recherche dans les dropdowns
-displayResults(recipes); // Affichage initial des recettes

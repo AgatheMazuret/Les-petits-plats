@@ -1,17 +1,13 @@
-import { removeSelectedOption } from "../main.js";
 import { performSearch } from "../algorithmes/algorithme1.js";
-import { displayResults } from "../main.js";
 
 const input = document.querySelector(".search input");
 
 // ****************************** Gestion de l'affichage des options sélectionnées********************************
-export function templateOptions(
-  type,
-  selectedOption,
-  containerSelector = ".selected-option-display" // Sélecteur par défaut pour le conteneur d'affichage
-) {
+export function templateOptions(type, selectedOption, onClose) {
   // Sélectionne le conteneur où afficher les options sélectionnées
-  const selectedOptionDisplay = document.querySelector(containerSelector);
+  const selectedOptionDisplay = document.querySelector(
+    ".selected-option-display"
+  );
 
   // Vérifie si le conteneur existe
   if (!selectedOptionDisplay) {
@@ -33,19 +29,17 @@ export function templateOptions(
 
   // Ajoute un événement de clic pour retirer l'option lorsqu'on clique sur l'icône de fermeture
   closeIcon.addEventListener("click", () => {
-    removeSelectedOption(type, selectedOption); // Retire l'option du tableau des options sélectionnées
     selectedOptionElement.remove(); // Retire l'élément de l'affichage
 
-    // Réexécute la recherche et met à jour les résultats
-    const searchValue = input.value.trim().toLowerCase();
-    const results = performSearch(searchValue, selectedOption); // fonction à définir
-    displayResults(results); // fonction à définir
+    onClose();
   });
 }
 
 // **************************************** Gestion de la position des options dans le dropdown******************************************
 export function moveOptionBelowSearch(option, dropdown) {
-  const dropdownSearch = document.querySelector(".dropdown-search");
+  const dropdownSearch = document.querySelector(
+    ".dropdown-content.dropdown-search"
+  );
 
   // Vérifie s'il y a un élément "dropdown-search" et une option sélectionnée
   if (dropdownSearch && option) {
@@ -103,7 +97,9 @@ export function insertSelectedItemAfterSearch(
   });
 
   // Insère l'élément sélectionné après le champ de recherche
-  const dropdownSearch = document.querySelector("input.dropdown-search");
+  const dropdownSearch = document.querySelector(
+    ".dropdown-content.dropdown-search"
+  );
   if (dropdownSearch) {
     dropdownSearch.insertAdjacentElement("afterend", selectedItem);
   } else {
