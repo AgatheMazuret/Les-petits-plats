@@ -27,6 +27,7 @@ export function setupSearch(onSearch) {
 
     // Ajouter un écouteur d'événement pour les changements de saisie dans le champ de recherche
     searchInput.addEventListener("input", (event) => {
+      event.preventDefault();
       const value = event.target.value.trim().toLowerCase();
 
       onSearch(value);
