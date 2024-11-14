@@ -1,37 +1,35 @@
 const input = document.querySelector(".search input");
 
 // ****************************** Gestion de l'affichage des options sélectionnées********************************
-export function templateOptions(type, selectedOption, onClose = () => {}) {
-  // Sélectionne le conteneur où afficher les options sélectionnées
-  const selectedOptionDisplay = document.querySelector(
-    ".selected-option-display"
-  );
+// export function templateOptions(type, selectedOption) {
+//   // Sélectionne le conteneur où afficher les options sélectionnées
+//   const selectedOptionDisplay = document.querySelector(
+//     ".selected-option-display"
+//   );
 
-  // Vérifie si le conteneur existe
-  if (!selectedOptionDisplay) {
-    console.error("Le conteneur spécifié est introuvable.");
-    return;
-  }
+//   // Vérifie si le conteneur existe
+//   if (!selectedOptionDisplay) {
+//     console.error("Le conteneur spécifié est introuvable.");
+//     return;
+//   }
 
-  // Crée un élément paragraphe pour afficher l'option sélectionnée
-  const selectedOptionElement = document.createElement("p");
-  selectedOptionElement.textContent = selectedOption; // Ajoute le texte de l'option
-  selectedOptionElement.classList.add("selected-option-option"); // Ajoute une classe pour le style
-  selectedOptionElement.setAttribute("data-type", type); // Ajoute un attribut pour identifier le type d'option
-  selectedOptionDisplay.appendChild(selectedOptionElement); // Ajoute l'élément au conteneur
+//   // Crée un élément paragraphe pour afficher l'option sélectionnée
+//   const selectedOptionElement = document.createElement("p");
+//   selectedOptionElement.textContent = selectedOption; // Ajoute le texte de l'option
+//   selectedOptionElement.classList.add("selected-option-option"); // Ajoute une classe pour le style
+//   selectedOptionElement.setAttribute("data-type", type); // Ajoute un attribut pour identifier le type d'option
+//   selectedOptionDisplay.appendChild(selectedOptionElement); // Ajoute l'élément au conteneur
 
-  // Crée une icône de fermeture pour retirer l'option
-  const closeIcon = document.createElement("i");
-  closeIcon.classList.add("fa-solid", "fa-x"); // Ajoute des classes pour l'icône
-  selectedOptionElement.appendChild(closeIcon); // Ajoute l'icône à l'élément
+//   // Crée une icône de fermeture pour retirer l'option
+//   const closeIcon = document.createElement("i");
+//   closeIcon.classList.add("fa-solid", "fa-x"); // Ajoute des classes pour l'icône
+//   selectedOptionElement.appendChild(closeIcon); // Ajoute l'icône à l'élément
 
-  // Ajoute un événement de clic pour retirer l'option lorsqu'on clique sur l'icône de fermeture
-  closeIcon.addEventListener("click", () => {
-    selectedOptionElement.remove(); // Retire l'élément de l'affichage
-
-    onClose();
-  });
-}
+//   // Ajoute un événement de clic pour retirer l'option lorsqu'on clique sur l'icône de fermeture
+//   closeIcon.addEventListener("click", () => {
+//     selectedOptionElement.remove(); // Retire l'élément de l'affichage
+//   });
+// }
 
 // **************************************** Gestion de la position des options dans le dropdown******************************************
 export function moveOptionBelowSearch(option, dropdown) {
@@ -42,7 +40,7 @@ export function moveOptionBelowSearch(option, dropdown) {
   // Vérifie s'il y a un élément "dropdown-search" et une option sélectionnée
   if (dropdownSearch && option) {
     dropdownSearch.insertAdjacentElement("afterend", option); // Insère l'option sélectionnée après le champ de recherche
-    option.style.display = "none"; // Masque l'option après la sélection
+    option.remove(); // Masque l'option après la sélection
   }
 }
 
