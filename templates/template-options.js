@@ -32,18 +32,20 @@ const input = document.querySelector(".search input");
 // }
 
 // **************************************** Gestion de la position des options dans le dropdown******************************************
-export function moveOptionBelowSearch(option, dropdown) {
-  const dropdownSearch = document.querySelector(
-    ".dropdown-content.dropdown-search"
-  );
 
-  // Vérifie s'il y a un élément "dropdown-search" et une option sélectionnée
+export function moveOptionBelowSearch(option, dropdown) {
+  // Sélectionne l'élément "dropdown-search" dans le dropdown fourni
+  const dropdownSearch = document.querySelector(".dropdown-search");
+
+  // Vérifie s'il y a un élément "dropdown-search" et une option
   if (dropdownSearch && option) {
-    dropdownSearch.insertAdjacentElement("afterend", option); // Insère l'option sélectionnée après le champ de recherche
-    option.remove(); // Masque l'option après la sélection
+    // Insère l'option juste après le champ de recherche
+    dropdownSearch.insertAdjacentElement("afterend", option);
+
+    // Retire l'option de son emplacement précédent (facultatif, si nécessaire)
+    option.remove();
   }
 }
-
 //****************************************Insertion des éléments sélectionnés dans l'interface utilisateur***************************************
 // export function insertSelectedItemAfterSearch(
 //   selectedText,

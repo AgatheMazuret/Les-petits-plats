@@ -2,11 +2,13 @@
 import "./styles/style.css"; // Styles
 import { cardTemplate } from "./templates/card.js"; // Modèle de carte
 import { recipes } from "./public/recipes.js"; // Liste des recettes
-import { performSearch } from "./algorithmes/algorithme1.js"; // Fonction de recherche
+import { performSearch } from "./algorithmes/algorithme2.js"; // Fonction de recherche
 import { setupSearch } from "./templates/searchbar.js"; // Barre de recherche
 import { setupDropdownSearch } from "./templates/input-search.js"; // Recherche dans les dropdowns
 import { initializeDropdowns } from "./templates/initialize-dropdowns.js"; // Initialisation des dropdowns
 import { moveOptionBelowSearch } from "./templates/template-options.js"; // Position des options dans le dropdown
+import { displayResults } from "./templates/displayResults.js";
+import { updateRecipeCount } from "./templates/displayResults.js";
 // ********************************* Initialisation des variables ********************************************
 const selectedOptions = {
   ingredients: [],
@@ -16,21 +18,18 @@ const selectedOptions = {
 let searchValue = "";
 
 // ********************************* Mise à jour du compteur de recettes *******************************************
-function updateRecipeCount(count) {
-  const recipeCount = document.querySelector(".nbr-recettes");
-  recipeCount.textContent = `${count} recettes`; // Affiche le nombre de recettes
-}
+updateRecipeCount();
 
-// ********************************* Affichage des recettes dans le DOM *******************************************
-export function displayResults(results) {
-  const recipesSection = document.querySelector(".cards");
-  recipesSection.innerHTML = ""; // Réinitialise les recettes
+// // ********************************* Affichage des recettes dans le DOM *******************************************
+// function displayResults(results) {
+//   const recipesSection = document.querySelector(".cards");
+//   recipesSection.innerHTML = ""; // Réinitialise les recettes
 
-  results.forEach((recipe) => {
-    cardTemplate(recipe);
-  });
-  updateRecipeCount(results.length);
-}
+//   results.forEach((recipe) => {
+//     cardTemplate(recipe);
+//   });
+//   updateRecipeCount(results.length);
+// }
 
 // ********************************* Gestion des filtres et options sélectionnées ********************************************
 initializeDropdowns(); // Initialise les dropdowns
@@ -48,6 +47,7 @@ export function removeSelectedOption(type, selectedOption) {
 }
 
 // ********************************* Rendu des options sélectionnées sous forme de tags ********************************************
+
 function renderSelectedOptions() {
   const selectedOptionDisplay = document.querySelector(
     ".selected-option-display"
@@ -164,10 +164,37 @@ setupDropdownSearch(
 // Fonction pour insérer un élément sélectionné après le champ de recherche dans le dropdown
 function insertSelectedItemAfterSearch(
   selectedText,
-  dropdownSearchSelector = ".dropdown-search", // Sélecteur par défaut pour le champ de recherche
-  option,
-  originalIndex
+  dropdownContainer, // Conteneur spécifique du dropdown
+  displayResultsCallback, // Fonction pour mettre à jour les résultats
+  recipes // Liste des recettes
 ) {
+  // Vérifie si le conteneur existe
+  const container = document.querySelector(dropdownContainer);
+  if (!container) {
+    console.error(
+      `Le conteneur ${dropdownContainer} n'existe pas dans le DOM.`
+    );
+    return;
+  }
+
+  // Recherche le champ de recherche à l'intérieur de ce conteneur
+  const inputDropdownSearch = container.querySelector(".dropdown-search");
+  if (!inputDropdownSearch) {
+    console.error(
+      `Aucun champ .dropdown-search trouvé dans ${dropdownContainer}.`
+    );
+    return;
+  }
+
+  // Empêche l'ajout de doublons dans ce conteneur
+  const existingItem = Array.from(
+    container.querySelectorAll(".option-search")
+  ).find((item) => item.textContent.includes(selectedText));
+  if (existingItem) {
+    console.warn("Cet élément est déjà sélectionné dans ce dropdown.");
+    return;
+  }
+
   // Crée un élément div avec le texte sélectionné
   const selectedItem = document.createElement("div");
   selectedItem.textContent = selectedText;
@@ -179,22 +206,19 @@ function insertSelectedItemAfterSearch(
 
   // Ajoute l'icône de fermeture à l'élément
   selectedItem.appendChild(closeIcon);
+
   // Ajouter un événement de clic pour supprimer l'élément
   closeIcon.addEventListener("click", () => {
-    selectedItem.remove(); // Supprime l'élément de la liste des éléments sélectionnés
-    displayResults(recipes); // Affiche les résultats mis à jour
+    selectedItem.remove(); // Supprime l'élément
+    if (typeof displayResultsCallback === "function") {
+      displayResultsCallback(recipes); // Met à jour les résultats
+    } else {
+      console.warn("displayResultsCallback n'est pas une fonction valide.");
+    }
   });
 
   // Insère l'élément sélectionné après le champ de recherche
-  const inputDropdownSearch = document.querySelector(".dropdown-search");
-  // Vérifie si l'élément existe, puis insère l'élément sélectionné juste après
-  if (inputDropdownSearch) {
-    inputDropdownSearch.insertAdjacentElement("afterend", selectedItem);
-  } else {
-    console.error(
-      `L'élément ${dropdownSearchSelector} n'existe pas dans le DOM.`
-    );
-  }
+  inputDropdownSearch.insertAdjacentElement("afterend", selectedItem);
 }
 
 //   // Réaffiche et replace l'option dans le dropdown à sa position d'origine
@@ -302,9 +326,14 @@ function handleDropdown(
   templateOptions,
   moveOptionBelowSearch
 ) {
-  const dropdownOptions = document.querySelectorAll(
-    `${dropdownSelector} .dropdown-option`
-  );
+  const dropdown = document.querySelector(dropdownSelector);
+
+  if (!dropdown) {
+    console.error(`Dropdown "${dropdownSelector}" not found.`);
+    return;
+  }
+
+  const dropdownOptions = dropdown.querySelectorAll(".dropdown-option");
 
   dropdownOptions.forEach((option) => {
     option.addEventListener("click", (event) => {
@@ -316,17 +345,15 @@ function handleDropdown(
         !selectedOptions[selectedOptionsKey].includes(selectedText)
       ) {
         // Ajoute l'option au tableau des options sélectionnées
-        if (Array.isArray(selectedOptions[selectedOptionsKey])) {
-          selectedOptions[selectedOptionsKey].push(selectedText);
-        } else {
-          selectedOptions[selectedOptionsKey] = selectedText; // Définit l'option comme sélectionnée
+        if (!Array.isArray(selectedOptions[selectedOptionsKey])) {
+          selectedOptions[selectedOptionsKey] = [];
         }
+        selectedOptions[selectedOptionsKey].push(selectedText);
 
         // Stocke l'index d'origine de l'option
         const originalIndex = Array.from(dropdownOptions).indexOf(option);
 
         // Insère l'élément sélectionné après le champ de recherche
-
         insertSelectedItemAfterSearch(
           selectedText,
           dropdownSelector,
@@ -334,17 +361,17 @@ function handleDropdown(
         );
 
         // Réexécute la recherche et met à jour les résultats
-        const input = document.querySelector(".dropdown-search");
-        const searchValue = input.value.trim().toLowerCase();
+        const input = dropdown.querySelector(".dropdown-search");
+        const searchValue = input ? input.value.trim().toLowerCase() : "";
         const results = performSearch(searchValue, selectedOptions, input);
-        displayResults(results);
 
         // Affiche l'option sélectionnée dans la zone dédiée
         templateOptions(selectedOptionsKey, selectedText);
 
         // Remonte l'option sélectionnée juste en dessous du champ de recherche et la masque (si applicable)
-        const dropdown = document.querySelector(dropdownSelector);
-        moveOptionBelowSearch(option, dropdown);
+        const dropdowns = document.querySelectorAll(dropdownSelector);
+        moveOptionBelowSearch(option, dropdowns);
+        displayResults(results);
       }
     });
   });
