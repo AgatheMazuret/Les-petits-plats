@@ -40,6 +40,7 @@ displayResults(recipes); // Affiche les recettes
 
 /* ----- Syncroniser les suppressions d'options sélectionnées ----- */
 function synchroRemove(type, selectedOption) {
+  /* ------Suppression de l'option sous le dropdwon quand on supprime une option dans le dropdown------ */
   const selectedOptionDisplay = document.querySelector(
     ".selected-option-display"
   );
@@ -49,6 +50,11 @@ function synchroRemove(type, selectedOption) {
 
   if (selectedOptionElement) {
     selectedOptionElement.remove();
+  }
+  /* ------Suppression de l'option dans le dropdwon quand on supprime une option sous le dropdown------ */
+  const optionSearch = document.querySelector(".option-search");
+  if (optionSearch) {
+    optionSearch.remove();
   }
 }
 // ---- Suppression d'une option sélectionnée ----
