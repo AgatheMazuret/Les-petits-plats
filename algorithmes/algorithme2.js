@@ -1,14 +1,14 @@
 import { recipes } from "../public/recipes.js";
 
-// *******************************************************Algorithme boucle for******************************************************
+/* *******************************************************Algorithme boucle for****************************************************** */
 
-// Fonction qui effectue la recherche de recettes en fonction de la valeur de recherche fournie
+/* Fonction qui effectue la recherche de recettes en fonction de la valeur de recherche fournie */
 export function performSearch(searchValue, selectedOptions) {
-  // Mettre la valeur de recherche en minuscule pour les comparaisons
+  /* Mettre la valeur de recherche en minuscule pour les comparaisons */
   const searchValueLower = searchValue.toLowerCase();
   const filteredRecipes = [];
 
-  // Filtrer les recettes en fonction de la valeur de recherche (nom ou description)
+  /* Filtrer les recettes en fonction de la valeur de recherche (nom ou description) */
   for (let i = 0; i < recipes.length; i++) {
     const recipe = recipes[i];
     if (
@@ -21,35 +21,35 @@ export function performSearch(searchValue, selectedOptions) {
 
   const selectedRecipes = [];
 
-  // Filtrer les recettes en fonction des options sélectionnées (ingrédients, ustensiles, appareil)
+  /* Filtrer les recettes en fonction des options sélectionnées (ingrédients, ustensiles, appareil) */
   for (let i = 0; i < filteredRecipes.length; i++) {
     const recipe = filteredRecipes[i];
 
-    // Vérifier si tous les ingrédients sélectionnés sont présents dans la recette
+    /* Vérifier si tous les ingrédients sélectionnés sont présents dans la recette */
     let ingredientsMatch = true;
 
     if (selectedOptions.ingredients.length > 0) {
-      for (let j = 0; j < selectedOptions.ingredients.length; j++) {
-        const ingredient = selectedOptions.ingredients[j].toLowerCase();
+      for (let k = 0; k < selectedOptions.ingredients.length; k++) {
+        const ingredient = selectedOptions.ingredients[k].toLowerCase();
         let ingredientFound = false;
 
         for (let k = 0; k < recipe.ingredients.length; k++) {
-          const recipeIngredient = recipe.ingredients[k].toLowerCase();
-
+          const recipeIngredient =
+            recipe.ingredients[k].ingredient.toLowerCase();
           if (recipeIngredient.includes(ingredient)) {
             ingredientFound = true;
-            break; // Si l'ingrédient est trouvé, sortir de la boucle `k`
+            break; // Si l'ingrédient est trouvé, arrêter la recherche pour cet ingrédient
           }
         }
 
         if (!ingredientFound) {
-          ingredientsMatch = false;
-          break; // Si un ingrédient n'est pas trouvé, sortir de la boucle `j`
+          ingredientsMatch = false; // Changer ingredientsMatch à false si un ingrédient est manquant
+          break; // Si un ingrédient n'est pas trouvé, arrêter la boucle
         }
       }
     }
 
-    // Vérifier si tous les ustensiles sélectionnés sont présents dans la recette
+    /* Vérifier si tous les ustensiles sélectionnés sont présents dans la recette */
     let ustensilsMatch = true;
     if (selectedOptions.ustensils.length > 0) {
       for (let j = 0; j < selectedOptions.ustensils.length; j++) {
@@ -71,7 +71,7 @@ export function performSearch(searchValue, selectedOptions) {
       }
     }
 
-    // Vérifier si l'appareil sélectionné correspond à celui de la recette
+    /* Vérifier si l'appareil sélectionné correspond à celui de la recette */
     let applianceMatch = true;
     if (selectedOptions.appliance) {
       applianceMatch = recipe.appliance
@@ -79,7 +79,7 @@ export function performSearch(searchValue, selectedOptions) {
         .includes(selectedOptions.appliance.toLowerCase());
     }
 
-    // Si tous les critères sont respectés, ajouter la recette à la liste des résultats
+    /* Si tous les critères sont respectés, ajouter la recette à la liste des résultats */
     if (ingredientsMatch && ustensilsMatch && applianceMatch) {
       selectedRecipes.push(recipe);
     }

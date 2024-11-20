@@ -1,7 +1,7 @@
 import { cardTemplate } from "../templates/card.js";
 
-// ********************************* Affichage des recettes dans le DOM *******************************************
-// ********************************* Mise à jour du compteur de recettes *******************************************
+/* ********************************* Affichage des recettes dans le DOM ******************************************* */
+/* ********************************* Mise à jour du compteur de recettes ******************************************* */
 export function updateRecipeCount(count) {
   const recipeCount = document.querySelector(".nbr-recettes");
   recipeCount.textContent = `${count} recettes`; // Affiche le nombre de recettes

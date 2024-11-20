@@ -10,7 +10,6 @@ export function setupSearch() {
   searchInput.addEventListener("input", (event) => {
     event.preventDefault();
     const value = event.target.value.trim().toLowerCase();
-    console.log(value);
   });
 
   const searchButton = document.querySelector(".search-btn");
