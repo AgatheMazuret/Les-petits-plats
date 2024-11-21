@@ -199,8 +199,7 @@ button .fa-magnifying-glass {
 
 .selected-option-display {
   display: flex;
-  flex-wrap: wrap;
-  margin-left: 110px;
+  margin-left: 50px;
   gap: 20px;
 }
 

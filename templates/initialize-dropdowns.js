@@ -55,13 +55,4 @@ export function initializeDropdowns() {
     ".dropdown-content.dropdown-search",
     ".selected-options-container"
   ); // Recherche dans les dropdowns
-
-  // // Ajouter l'événement de clic pour afficher/masquer le dropdown
-  // const dropdowns = document.querySelectorAll(".dropdown-button");
-  // dropdowns.forEach((dropdown) => {
-  //   dropdown.addEventListener("click", () => {
-  //     const optionsContainer = dropdown.nextElementSibling; // Assure-toi que l'élément suivant est le conteneur
-  //     optionsContainer.classList.toggle("show");
-  //   });
-  // });
 }

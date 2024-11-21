@@ -27,6 +27,7 @@ export function performSearch(searchValue, selectedOptions) {
 
     // Vérifier si tous les ingrédients sélectionnés sont présents dans la recette
     let ingredientsMatch = true;
+
     if (selectedOptions.ingredients.length > 0) {
       for (let j = 0; j < selectedOptions.ingredients.length; j++) {
         const ingredient = selectedOptions.ingredients[j].toLowerCase();
@@ -34,15 +35,16 @@ export function performSearch(searchValue, selectedOptions) {
 
         for (let k = 0; k < recipe.ingredients.length; k++) {
           const recipeIngredient = recipe.ingredients[k].toLowerCase();
+
           if (recipeIngredient.includes(ingredient)) {
             ingredientFound = true;
-            break; // Si l'ingrédient est trouvé, arrêter la recherche pour cet ingrédient
+            break; // Si l'ingrédient est trouvé, sortir de la boucle `k`
           }
         }
 
         if (!ingredientFound) {
           ingredientsMatch = false;
-          break; // Si un ingrédient n'est pas trouvé, arrêter la boucle
+          break; // Si un ingrédient n'est pas trouvé, sortir de la boucle `j`
         }
       }
     }

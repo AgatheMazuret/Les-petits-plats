@@ -1,35 +1,30 @@
+import { recipes } from "../public/recipes";
+import { displayResults } from "./displayResults";
 /**
  *
  * @param {(value:string)=> void} onSearch
  */
-export function setupSearch(onSearch) {
-  // Sélectionner les éléments du formulaire et du champ de recherche
-  document.addEventListener("DOMContentLoaded", () => {
-    const searchForm = document.querySelector("form.search"); // Utilise le sélecteur passé en paramètre
-    const searchInput = document.querySelector(".search input"); // Utilise aussi le sélecteur passé en paramètre
+export function setupSearch() {
+  const searchInput = document.querySelector(".search-input");
 
-    // Vérifier que les éléments existent
-    if (!searchForm || !searchInput) {
-      console.error("Formulaire ou champ de recherche introuvable");
-      return;
-    }
+  searchInput.addEventListener("input", (event) => {
+    event.preventDefault();
+    const value = event.target.value.trim().toLowerCase();
+    console.log(value);
+  });
 
-    // Ajouter un écouteur d'événement pour la soumission du formulaire
-    searchForm.addEventListener("submit", (event) => {
-      event.preventDefault();
-      // Récupérer les données du formulaire
-      const formData = new FormData(searchForm);
-      // Récupérer la valeur du champ de recherche
-      const value = formData.get("search").trim().toLowerCase();
+  const searchButton = document.querySelector(".search-btn");
 
-      onSearch(value);
+  searchButton.addEventListener("click", () => {
+    event.preventDefault();
+    const value = searchInput.value.trim().toLowerCase();
+
+    const filteredRecipes = recipes.filter((recipe) => {
+      return (
+        recipe.name.toLowerCase().includes(value) ||
+        recipe.description.toLowerCase().includes(value)
+      );
     });
-
-    // Ajouter un écouteur d'événement pour les changements de saisie dans le champ de recherche
-    searchInput.addEventListener("input", (event) => {
-      const value = event.target.value.trim().toLowerCase();
-
-      onSearch(value);
-    });
+    displayResults(filteredRecipes);
   });
 }

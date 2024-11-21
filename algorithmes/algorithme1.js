@@ -21,7 +21,7 @@ export function performSearch(searchValue, selectedOptions) {
     // S'assurer que selectedOptions est correctement initialisé
     const selectedIngredients = selectedOptions.ingredients || [];
     const selectedUstensils = selectedOptions.ustensils || [];
-    const selectedAppliance = selectedOptions.appliance || "";
+    const selectedAppliance = (selectedOptions.appliance || "").toString();
 
     // Filtrer selon les ingrédients sélectionnés : Tous les ingrédients sélectionnés doivent être présents dans la recette
     const ingredientsMatch =
