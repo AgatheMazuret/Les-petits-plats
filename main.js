@@ -3,7 +3,6 @@
 import "./styles/style.css"; /* Styles */
 
 /* ---- Importation des modules ---- */
-import { cardTemplate } from "./templates/card.js"; /* Modèle de carte */
 import { recipes } from "./public/recipes.js"; /* Liste des recettes */
 import { performSearch } from "./algorithmes/algorithme1.js"; /* Fonction de recherche */
 
