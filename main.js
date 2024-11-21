@@ -5,7 +5,7 @@ import "./styles/style.css"; /* Styles */
 /* ---- Importation des modules ---- */
 import { cardTemplate } from "./templates/card.js"; /* Modèle de carte */
 import { recipes } from "./public/recipes.js"; /* Liste des recettes */
-import { performSearch } from "./algorithmes/algorithme2.js"; /* Fonction de recherche */
+import { performSearch } from "./algorithmes/algorithme1.js"; /* Fonction de recherche */
 
 /* ---- Importation des templates et utilitaires ---- */
 import { setupSearch } from "./templates/searchbar.js"; /* Barre de recherche */
