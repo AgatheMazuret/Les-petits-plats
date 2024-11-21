@@ -1,9 +1,9 @@
-// Importation des ressources
+/* Importation des ressources nécessaires */
 import { recipes } from "../public/recipes.js"; // Liste des recettes
 import { createDropdown } from "./dropdown.js"; // Création des dropdowns
 import { setupDropdownSearch } from "./input-search.js";
 
-// Fonction pour récupérer tous les appareils sans doublons
+/* Fonction pour récupérer tous les appareils sans doublons */
 export function getAllAppliances(recipes) {
   const appliancesSet = new Set();
   recipes.forEach((recipe) => {
@@ -12,7 +12,7 @@ export function getAllAppliances(recipes) {
   return Array.from(appliancesSet);
 }
 
-// Fonction pour récupérer tous les ustensiles sans doublons
+/* Fonction pour récupérer tous les ustensiles sans doublons */
 export function getAllUstensils(recipes) {
   const ustensilsSet = new Set();
   recipes.forEach((recipe) => {
@@ -23,7 +23,7 @@ export function getAllUstensils(recipes) {
   return Array.from(ustensilsSet);
 }
 
-// Fonction pour récupérer tous les ingrédients sans doublons
+/* Fonction pour récupérer tous les ingrédients sans doublons */
 export function getAllIngredients(recipes) {
   const ingredientsSet = new Set();
   recipes.forEach((recipe) => {
@@ -38,9 +38,9 @@ export function getAllIngredients(recipes) {
   return Array.from(ingredientsSet);
 }
 
-// Créer les dropdowns et gérer les interactions
+/* Créer les dropdowns et gérer les interactions */
 export function initializeDropdowns() {
-  // Appel des fonctions pour obtenir les listes
+  /* Appel des fonctions pour obtenir les listes d'appareils, ustensiles et ingrédients */
   const allAppliances = getAllAppliances(recipes);
   const allUstensils = getAllUstensils(recipes);
   const allIngredients = getAllIngredients(recipes);

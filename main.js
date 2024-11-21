@@ -1,45 +1,46 @@
-// ********************************* Importation des ressources ********************************************
-// ---- Import des styles ----
-import "./styles/style.css"; // Styles
+/* ------------------------------------ Importation des ressources ------------------------------------ */
+/* ---- Importation des styles ---- */
+import "./styles/style.css"; /* Styles */
 
-// ---- Import des modules ----
-import { cardTemplate } from "./templates/card.js"; // Modèle de carte
-import { recipes } from "./public/recipes.js"; // Liste des recettes
-import { performSearch } from "./algorithmes/algorithme1.js"; // Fonction de recherche
+/* ---- Importation des modules ---- */
+import { cardTemplate } from "./templates/card.js"; /* Modèle de carte */
+import { recipes } from "./public/recipes.js"; /* Liste des recettes */
+import { performSearch } from "./algorithmes/algorithme2.js"; /* Fonction de recherche */
 
-// ---- Import des templates et utilitaires ----
-import { setupSearch } from "./templates/searchbar.js"; // Barre de recherche
-import { setupDropdownSearch } from "./templates/input-search.js"; // Recherche dans les dropdowns
-import { initializeDropdowns } from "./templates/initialize-dropdowns.js"; // Initialisation des dropdowns
-import { moveOptionBelowSearch } from "./templates/template-options.js"; // Position des options dans le dropdown
+/* ---- Importation des templates et utilitaires ---- */
+import { setupSearch } from "./templates/searchbar.js"; /* Barre de recherche */
+import { setupDropdownSearch } from "./templates/input-search.js"; /* Recherche dans les dropdowns */
+import { initializeDropdowns } from "./templates/initialize-dropdowns.js"; /* Initialisation des dropdowns */
+import { moveOptionBelowSearch } from "./templates/template-options.js"; /* Position des options dans le dropdown */
 import {
   displayResults,
   updateRecipeCount,
-} from "./templates/displayResults.js"; // Affichage des résultats
+} from "./templates/displayResults.js"; /* Affichage des résultats */
 
-// ********************************* Initialisation des variables ********************************************
-// ---- Structure des options sélectionnées ----
+/* ********************************* Initialisation des variables ******************************************** */
+/* ---- Structure des options sélectionnées ---- */
 const selectedOptions = {
-  ingredients: [],
-  ustensils: [],
-  appliance: null,
+  ingredients: [] /* Liste des ingrédients sélectionnés */,
+  ustensils: [] /* Liste des ustensiles sélectionnés */,
+  appliance: null /* Appareil sélectionné (unique) */,
 };
 
-// ---- Valeurs de recherche ----
-let searchValue = "";
+/* ---- Valeurs de recherche ---- */
+let searchValue = ""; /* Valeur de recherche actuelle */
 
-// ********************************* Initialisation de l'application ********************************************
-// ---- Mise à jour du compteur de recettes ----
-updateRecipeCount();
+/* ********************************* Initialisation de l'application ******************************************** */
+/* ---- Mise à jour du compteur de recettes ---- */
+updateRecipeCount(); /* Met à jour le nombre de recettes affichées */
 
-// ---- Initialisation de l'affichage ----
-initializeDropdowns(); // Initialise les dropdowns
-displayResults(recipes); // Affiche les recettes
+/* ---- Initialisation de l'affichage ---- */
+initializeDropdowns(); /* Initialise les dropdowns */
+displayResults(recipes); /* Affiche toutes les recettes initialement */
 
-// ********************************* Gestion des options sélectionnées ********************************************
+/* ********************************* Gestion des options sélectionnées ******************************************** */
 
-/* ----- Syncroniser les suppressions d'options sélectionnées ----- */
+/* ----- Synchronisation des suppressions d'options sélectionnées ----- */
 function synchroRemove(type, selectedOption) {
+  /* ------ Suppression de l'option sous le dropdown lorsqu'une option est supprimée ------ */
   const selectedOptionDisplay = document.querySelector(
     ".selected-option-display"
   );
@@ -48,60 +49,84 @@ function synchroRemove(type, selectedOption) {
   );
 
   if (selectedOptionElement) {
-    selectedOptionElement.remove();
+    selectedOptionElement.remove(); /* Retire l'élément visuellement */
+  }
+
+  /* ------ Suppression de l'option dans le dropdown correspondant ------ */
+  const optionSearch = document.querySelector(".option-search");
+  if (optionSearch) {
+    optionSearch.remove(); /* Retire l'option du dropdown */
   }
 }
-// ---- Suppression d'une option sélectionnée ----
+
+/* ---- Suppression d'une option sélectionnée ---- */
 export function removeSelectedOption(type, selectedOption) {
   if (selectedOptions[type] && Array.isArray(selectedOptions[type])) {
     const index = selectedOptions[type].indexOf(selectedOption);
     if (index > -1) {
-      selectedOptions[type].splice(index, 1); // Supprime l'option
+      selectedOptions[type].splice(
+        index,
+        1
+      ); /* Supprime l'option de la liste */
     }
   } else if (selectedOptions[type]) {
-    selectedOptions[type] = null; // Réinitialise l'option unique
+    selectedOptions[type] = null; /* Réinitialise l'option unique */
   }
-  synchroRemove(type, selectedOption);
+  synchroRemove(type, selectedOption); /* Met à jour l'affichage */
 }
 
-// ---- Rendu des options sélectionnées ----
+/* ---- Rendu des options sélectionnées ---- */
 function renderSelectedOptions() {
-  // ---- Sélection du conteneur d'affichage ----
+  /* ---- Sélection du conteneur d'affichage des options ---- */
   const selectedOptionDisplay = document.querySelector(
     ".selected-option-display"
   );
-  selectedOptionDisplay.innerHTML = ""; // Réinitialise l'affichage
+  selectedOptionDisplay.innerHTML = ""; /* Vide le conteneur */
 
-  // ---- Affichage des options par type ----
+  /* ---- Affichage des options sélectionnées par type (ingrédients, ustensiles, appareil) ---- */
   for (const type in selectedOptions) {
     const options = selectedOptions[type];
 
     function onClose(selectedOption) {
-      removeSelectedOption(type, selectedOption); // Retire l'option
-      const searchValue = input.value.trim().toLowerCase(); // Met à jour la recherche
-      displayResults(recipes); // Rafraîchit l'affichage
+      removeSelectedOption(
+        type,
+        selectedOption
+      ); /* Retire l'option sélectionnée */
+      const searchValue = input.value
+        .trim()
+        .toLowerCase(); /* Met à jour la recherche */
+      displayResults(recipes); /* Rafraîchit l'affichage des résultats */
     }
 
     if (Array.isArray(options)) {
       options.forEach((option) => {
-        templateOptions(type, option, onClose); // Affiche chaque option
+        templateOptions(
+          type,
+          option,
+          onClose
+        ); /* Affiche chaque option pour les listes */
       });
     } else if (options) {
-      templateOptions(type, options, onClose); // Affiche l'option unique
+      templateOptions(
+        type,
+        options,
+        onClose
+      ); /* Affiche l'option unique (pour appareil) */
     }
   }
 
-  // ---- Activation de la barre de recherche ----
+  /* ---- Activation de la barre de recherche ---- */
   setupSearch(".search", recipes, displayResults);
 }
 
+/* Rendu initial des options sélectionnées */
 renderSelectedOptions("ingredients");
 renderSelectedOptions("appliance");
 renderSelectedOptions("ustensils");
 
-// ---- Template pour une option sélectionnée ----
+/* ---- Template pour afficher une option sélectionnée ---- */
 function templateOptions(type, selectedOption) {
-  // ---- Vérification et création des éléments ----
+  /* ---- Vérification et création des éléments ---- */
   const selectedOptionDisplay = document.querySelector(
     ".selected-option-display"
   );
@@ -117,27 +142,30 @@ function templateOptions(type, selectedOption) {
   selectedOptionElement.setAttribute("data-type", type);
   selectedOptionDisplay.appendChild(selectedOptionElement);
 
-  // ---- Création de l'icône de fermeture ----
+  /* ---- Création de l'icône de fermeture pour supprimer l'option ---- */
   const closeIcon = document.createElement("i");
   closeIcon.classList.add("fa-solid", "fa-x");
   selectedOptionElement.appendChild(closeIcon);
 
-  // ---- Gestion de la suppression ----
+  /* Gestion de la suppression de l'option sélectionnée */
   closeIcon.addEventListener("click", () => {
-    selectedOptionElement.remove();
-    removeSelectedOption(type, selectedOption);
-    displayResults(recipes); // Affiche les résultats mis à jour
+    selectedOptionElement.remove(); /* Retire l'élément visuellement */
+    removeSelectedOption(
+      type,
+      selectedOption
+    ); /* Retire l'option de la liste */
+    displayResults(recipes); /* Met à jour l'affichage des résultats */
   });
 }
 
-// ********************************* Gestion des dropdowns ********************************************
-// ---- Recherche dans les dropdowns ----
+/* ********************************* Gestion des dropdowns ******************************************** */
+/* ---- Recherche dans les dropdowns ---- */
 setupDropdownSearch(
   ".dropdown-content.dropdown-search",
   ".selected-options-container"
 );
 
-// ---- Ajout d'une option sélectionnée dans un dropdown ----
+/* ---- Ajout d'une option sélectionnée dans un dropdown ---- */
 function insertSelectedItemAfterSearch(selectedText, dropdownContainer, type) {
   const container = document.querySelector(dropdownContainer);
   if (!container) {
@@ -155,7 +183,7 @@ function insertSelectedItemAfterSearch(selectedText, dropdownContainer, type) {
     return;
   }
 
-  // Empêche l'ajout de doublons dans ce conteneur
+  // Empêche les doublons dans le dropdown
   const existingItem = Array.from(
     container.querySelectorAll(".option-search")
   ).find((item) => item.textContent.includes(selectedText));
@@ -173,88 +201,78 @@ function insertSelectedItemAfterSearch(selectedText, dropdownContainer, type) {
   selectedItem.appendChild(closeIcon);
 
   closeIcon.addEventListener("click", () => {
-    removeSelectedOption(type, selectedText); // Retire l'option
-    selectedItem.remove(); // Supprime l'élément sélectionné
+    removeSelectedOption(type, selectedText); /* Retire l'option de la liste */
+    selectedItem.remove(); /* Retire l'élément visuellement */
   });
 
   inputDropdownSearch.insertAdjacentElement("afterend", selectedItem);
 
-  // --- Ajout du performSearch pour mettre à jour les résultats
+  // Effectue la recherche avec la valeur actuelle
   const searchValue = inputDropdownSearch.value.trim().toLowerCase();
-  const results = performSearch(searchValue, selectedOptions); // Met à jour les résultats filtrés
-  displayResults(results); // Affiche les nouveaux résultats
+  const results = performSearch(
+    searchValue,
+    selectedOptions
+  ); /* Met à jour les résultats filtrés */
+  displayResults(results); /* Affiche les nouveaux résultats */
 }
 
-// ---- Gestion des événements sur les options de dropdown ----
-
-function handleDropdown(
-  dropdownSelector, // Sélecteur pour cibler le menu déroulant
-  selectedOptionsKey // Clé pour stocker les options sélectionnées
-) {
-  // Sélectionne le menu déroulant dans le DOM en utilisant le sélecteur fourni
+/* ---- Gestion des événements sur les options de dropdown ---- */
+function handleDropdown(dropdownSelector, selectedOptionsKey) {
   const dropdown = document.querySelector(dropdownSelector);
 
-  // Si le menu déroulant n'est pas trouvé, afficher une erreur dans la console et arrêter l'exécution
   if (!dropdown) {
     console.error(`Dropdown "${dropdownSelector}" not found.`);
     return;
   }
 
-  // Récupère toutes les options disponibles dans le menu déroulant
   const dropdownOptions = dropdown.querySelectorAll(".dropdown-option");
 
-  // Ajoute un gestionnaire d'événements "click" à chaque option du menu déroulant
   dropdownOptions.forEach((option) => {
     option.addEventListener("click", (event) => {
-      // Récupère le texte de l'option sélectionnée, en supprimant les espaces inutiles
       const selectedText = option.textContent.trim();
 
-      // Vérifie si l'option n'est pas déjà sélectionnée
+      /* Vérifie si l'option est déjà sélectionnée */
       if (
         (Array.isArray(selectedOptions[selectedOptionsKey]) &&
-          !selectedOptions[selectedOptionsKey].includes(selectedText)) || // Si l'option n'est pas déjà dans la liste
-        selectedOptions[selectedOptionsKey] !== selectedText // Si l'option n'est pas déjà sélectionnée
+          !selectedOptions[selectedOptionsKey].includes(selectedText)) ||
+        selectedOptions[selectedOptionsKey] !== selectedText
       ) {
-        // Ajoute l'option sélectionnée au tableau correspondant
         if (Array.isArray(selectedOptions[selectedOptionsKey])) {
-          selectedOptions[selectedOptionsKey].push(selectedText);
+          selectedOptions[selectedOptionsKey].push(
+            selectedText
+          ); /* Ajoute à la liste */
         } else {
-          selectedOptions[selectedOptionsKey] = selectedText;
+          selectedOptions[selectedOptionsKey] =
+            selectedText; /* Assigne l'option unique */
         }
 
-        // Appelle une fonction pour insérer l'option sélectionnée dans une zone spécifique (après la recherche)
         insertSelectedItemAfterSearch(
           selectedText,
           dropdownSelector,
           selectedOptionsKey
-        );
-
-        // Récupère la valeur du champ de recherche dans le menu déroulant, si disponible
+        ); /* Ajoute l'option au dropdown */
         const input = dropdown.querySelector(".dropdown-search");
         const searchValue = input ? input.value.trim().toLowerCase() : "";
 
-        // Effectue une recherche avec la valeur actuelle du champ de recherche
-        const results = performSearch(searchValue, selectedOptions, input);
-
-        // Met à jour les options du modèle avec la clé et le texte sélectionné
-        templateOptions(selectedOptionsKey, selectedText);
-
-        // Re-sélectionne tous les menus déroulants correspondant au sélecteur
-        const dropdowns = document.querySelectorAll(dropdownSelector);
-
-        // Déplace l'option sélectionnée sous le champ de recherche (si nécessaire)
-        moveOptionBelowSearch(option, dropdowns);
-
-        // Affiche les résultats mis à jour après la recherche
-        displayResults(results);
+        const results = performSearch(
+          searchValue,
+          selectedOptions
+        ); /* Met à jour les résultats filtrés */
+        templateOptions(
+          selectedOptionsKey,
+          selectedText
+        ); /* Ajoute le modèle d'option */
+        moveOptionBelowSearch(
+          option,
+          document.querySelectorAll(dropdownSelector)
+        ); /* Déplace l'option sous la barre de recherche */
+        displayResults(results); /* Affiche les résultats mis à jour */
       }
     });
   });
 }
 
-// ---- Gestion des dropdowns spécifiques ----
+/* ---- Gestion des dropdowns spécifiques ---- */
 handleDropdown("#ingredients.dropdown", "ingredients");
-
 handleDropdown("#appliance.dropdown", "appliance");
-
 handleDropdown("#ustensils.dropdown", "ustensils");

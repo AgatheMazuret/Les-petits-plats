@@ -14,7 +14,7 @@ export function cardTemplate(recipe) {
   const nameRecipe = recipe.name;
   const descriptionRecipe = recipe.description;
 
-  // Obtenir le container où on va mettre la card
+  /* Obtenir le container où on va mettre la card */
   const cardsContainer = document.querySelector(".cards");
 
   if (!cardsContainer) {
@@ -22,7 +22,7 @@ export function cardTemplate(recipe) {
     return;
   }
 
-  // Créer la structure HTML de la card
+  /* Créer la structure HTML de la card */
   const card = document.createElement("article");
   card.classList.add("card");
 
@@ -61,7 +61,7 @@ export function cardTemplate(recipe) {
   nameElementIngredients.textContent = "Ingrédients";
   cardBody.appendChild(nameElementIngredients);
 
-  // Créer une section pour les ingrédients
+  /* Créer une section pour les ingrédients */
   const ingredientSection = document.createElement("div");
   ingredientSection.classList.add("ingredient-section");
 
@@ -70,26 +70,26 @@ export function cardTemplate(recipe) {
     const quantity = ingredientObj.quantity ? ingredientObj.quantity : "";
     const unit = ingredientObj.unit ? ingredientObj.unit : "";
 
-    // Créer un élément pour le nom de l'ingrédient
+    /* Créer un élément pour le nom de l'ingrédient */
     const ingredientNameElement = document.createElement("span");
     ingredientNameElement.classList.add("ingredient-name");
     ingredientNameElement.textContent = ingredientName;
 
-    // Créer un élément pour la quantité et l'unité
+    /* Créer un élément pour la quantité et l'unité */
     const quantityUnitElement = document.createElement("span");
     quantityUnitElement.classList.add("quantity-unit");
 
-    // Formatage avec espace entre quantité et unité
+    /* Formatage avec espace entre quantité et unité */
     quantityUnitElement.textContent = `${quantity}${unit ? ` ${unit}` : ""}`;
 
-    // Ajouter les éléments à la section d'ingrédients
+    /* Ajouter les éléments à la section d'ingrédients */
     ingredientSection.appendChild(ingredientNameElement);
     ingredientSection.appendChild(quantityUnitElement);
   });
 
-  // Ajouter la section d'ingrédients au cardBody
+  /* Ajouter la section d'ingrédients au cardBody */
   cardBody.appendChild(ingredientSection);
 
-  // Ajouter la card au DOM
+  /* Ajouter la card au DOM */
   cardsContainer.appendChild(card);
 }
