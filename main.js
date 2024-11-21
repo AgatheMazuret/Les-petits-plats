@@ -61,6 +61,7 @@ function synchroRemove(type, selectedOption) {
 
 /* ---- Suppression d'une option sélectionnée ---- */
 export function removeSelectedOption(type, selectedOption) {
+  // Vérifie si selectedOptions[type] existe et si c'est un tableau.
   if (selectedOptions[type] && Array.isArray(selectedOptions[type])) {
     const index = selectedOptions[type].indexOf(selectedOption);
     if (index > -1) {
@@ -69,6 +70,7 @@ export function removeSelectedOption(type, selectedOption) {
         1
       ); /* Supprime l'option de la liste */
     }
+    // Si selectedOptions[type] existe mais n'est pas un tableau, le réinitialise à null.
   } else if (selectedOptions[type]) {
     selectedOptions[type] = null; /* Réinitialise l'option unique */
   }
