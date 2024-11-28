@@ -49,7 +49,7 @@ function synchroRemove(type, selectedOption) {
   );
 
   if (selectedOptionElement) {
-    selectedOptionElement.remove(); /* Retire l'élément visuellement */
+    selectedOptionElement.remove(); /* Retire l'élément */
   }
 
   /* ------ Suppression de l'option dans le dropdown correspondant ------ */
@@ -90,14 +90,16 @@ function renderSelectedOptions() {
     const options = selectedOptions[type];
 
     function onClose(selectedOption) {
-      removeSelectedOption(
-        type,
-        selectedOption
-      ); /* Retire l'option sélectionnée */
+      // Retire l'option sélectionnée dans la liste
+      removeSelectedOption(type, selectedOption);
+
+      // Récupère et nettoie la valeur saisie dans l'entrée de recherche
       const searchValue = input.value
-        .trim()
-        .toLowerCase(); /* Met à jour la recherche */
-      displayResults(recipes); /* Rafraîchit l'affichage des résultats */
+        .trim() // Supprime les espaces inutiles au début et à la fin
+        .toLowerCase(); // Convertit en minuscules pour une recherche insensible à la casse
+
+      // Met à jour l'affichage des résultats en fonction des nouvelles données
+      displayResults(recipes);
     }
 
     if (Array.isArray(options)) {
